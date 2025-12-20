@@ -1462,6 +1462,12 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     postcss_config_file?: scalar|null, // Path to PostCSS config file which is passed to the Tailwind CLI // Default: null
  *     strict_mode?: bool|null, // When enabled, an exception will be thrown if there are no built assets (default: false in `test` env, true otherwise) // Default: null
  * }
+ * @psalm-type UxMapConfig = array{
+ *     renderer?: scalar|null, // Default: null
+ *     google_maps?: array{
+ *         default_map_id?: scalar|null, // Default: null
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1476,6 +1482,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *     ux_map?: UxMapConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1493,6 +1500,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1508,6 +1516,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1524,6 +1533,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

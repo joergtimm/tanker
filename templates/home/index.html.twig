@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <!-- Container mit max. Breite 1600px -->
+    <div class="mx-auto max-w-[1600px]">
+
+        <!-- Header-Bild -->
+        <header>
+            <img src="https://via.placeholder.com/1600x400" alt="Header Bild" class="w-full h-auto object-cover" />
+        </header>
+
+        <!-- Navigationsmenü -->
+        <nav class="bg-gray-100 border-b border-gray-200">
+            <div class="max-w-screen-xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <a href="#" class="text-lg font-semibold">Meine Seite</a>
+                    <ul class="flex space-x-6">
+                        <li><a href="#" class="text-gray-700 hover:text-blue-600">Start</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-blue-600">Über uns</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-blue-600">Leistungen</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-blue-600">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <main class="px-4 py-12">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-4xl font-bold mb-4">Willkommen auf unserer Landingpage</h1>
+                <p class="text-lg text-gray-600 mb-6">
+                    Dies ist eine einfache responsive Landingpage mit Tailwind CSS und Flowbite.
+                </p>
+                <a href="#" class="inline-block px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    Jetzt mehr erfahren
+                </a>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-100 border-t border-gray-200 mt-12">
+            <div class="max-w-screen-xl mx-auto px-4 py-6 text-center text-sm text-gray-500">
+                © 2025 Deine Firma. Alle Rechte vorbehalten.
+            </div>
+        </footer>
+
+    </div>
+{% endblock %}

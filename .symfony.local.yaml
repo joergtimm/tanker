@@ -1,0 +1,7 @@
+workers:
+  tailwind:
+   cmd: ['symfony', 'console', 'tailwind:build', '--watch']
+  # sass:
+  #   cmd: [ 'symfony', 'console', 'sass:build', '--watch' ]
+  # auto start Docker compose when starting server (available since Symfony CLI 5.7.0)
+  # docker_compose: ~

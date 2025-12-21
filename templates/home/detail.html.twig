@@ -22,6 +22,20 @@
                                     {{ station.brand|default('Tankstelle') }}
                                 </span>
                                 <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-2">{{ station.name }}</h1>
+                                {% if app.user %}
+                                    <button
+                                        data-favorite-toggle="{{ path('app_favorite_toggle', {uuid: station.uuid}) }}"
+                                        class="favorite-btn inline-flex items-center justify-center p-3 rounded-2xl transition-all mb-4 {{ app.user.favorites.contains(station) ? 'text-yellow-400 bg-white/20' : 'text-blue-100 bg-white/10 hover:bg-white/20' }}"
+                                        title="{{ app.user.favorites.contains(station) ? 'Von Favoriten entfernen' : 'Zu Favoriten hinzufügen' }}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="{{ app.user.favorites.contains(station) ? 'currentColor' : 'none' }}" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.175 0l-3.976 2.888c-.784.57-1.838-.197-1.539-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                        </svg>
+                                        <span class="ml-2 font-bold uppercase text-xs tracking-widest favorite-label">
+                                            {{ app.user.favorites.contains(station) ? 'Favorit' : 'Zu Favoriten' }}
+                                        </span>
+                                    </button>
+                                {% endif %}
                                 <div class="flex items-center text-blue-100 italic">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -161,8 +175,53 @@
             </div>
 
             <div class="mt-12 text-center text-gray-400 text-sm">
-                <p>&copy; {{ "now"|date("Y") }} Tanker App - Alle Preise sind Endpreise inkl. MwSt.</p>
+                <p>&copy; {{ "now"|date("Y") }} NIG Tanker App - Alle Preise sind Endpreise inkl. MwSt.</p>
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const url = btn.dataset.favoriteToggle;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            const svg = btn.querySelector('svg');
+                            const label = btn.querySelector('.favorite-label');
+
+                            if (data.isFavorite) {
+                                btn.classList.remove('text-blue-100', 'bg-white/10');
+                                btn.classList.add('text-yellow-400', 'bg-white/20');
+                                svg.setAttribute('fill', 'currentColor');
+                                btn.title = 'Von Favoriten entfernen';
+                                if (label) label.textContent = 'Favorit';
+                            } else {
+                                btn.classList.remove('text-yellow-400', 'bg-white/20');
+                                btn.classList.add('text-blue-100', 'bg-white/10');
+                                svg.setAttribute('fill', 'none');
+                                btn.title = 'Zu Favoriten hinzufügen';
+                                if (label) label.textContent = 'Zu Favoriten';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

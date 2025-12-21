@@ -26,7 +26,7 @@ class StationDetail
     /**
      * @var Collection<int, OpeningTime>
      */
-    #[ORM\OneToMany(targetEntity: OpeningTime::class, mappedBy: 'stationDetail', orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: OpeningTime::class, mappedBy: 'stationDetail', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $openingTimeObjects;
 
     #[ORM\Column(type: Types::JSON, nullable: true)]

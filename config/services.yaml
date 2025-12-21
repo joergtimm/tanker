@@ -7,6 +7,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    nig_name: '%env(NIG_NAME)%'
+    nig_street: '%env(NIG_STREET)%'
+    nig_postcode: '%env(NIG_POSTCODE)%'
+    nig_city: '%env(NIG_CITY)%'
+    nig_lat: '%env(NIG_LAT)%'
+    nig_lng: '%env(NIG_LNG)%'
 
 services:
     # default configuration for services in *this* file

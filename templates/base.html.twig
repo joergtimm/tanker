@@ -2,7 +2,7 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}NIG Tanker{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
@@ -13,6 +13,27 @@
         {% endblock %}
     </head>
     <body class="bg-white text-gray-800">
+        <nav class="bg-white border-b border-gray-100">
+            <div class="container mx-auto px-4 max-w-6xl">
+                <div class="flex justify-between h-16">
+                    <div class="flex">
+                        <div class="flex-shrink-0 flex items-center">
+                            <a href="{{ path('app_home') }}" class="text-xl font-black text-blue-600 tracking-tighter">NIG TANKER</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        {% if app.user %}
+                            <a href="{{ path('app_favorites') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Favoriten</a>
+                            <a href="{{ path('app_profile') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Profil</a>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ app.user.userIdentifier }}</span>
+                            <a href="{{ path('app_logout') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Abmelden</a>
+                        {% else %}
+                            <a href="{{ path('app_login') }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Anmelden</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>

@@ -10,47 +10,136 @@
             <p class="text-lg text-gray-600 font-medium">Finden Sie die besten Preise im Umkreis von <span class="text-blue-600 font-bold">{{ current_radius }} km</span></p>
         </header>
 
-        <div class="mb-12 p-8 bg-white rounded-3xl shadow-xl border border-gray-100">
-            <form method="get" action="{{ path('app_home') }}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-end">
-                <div>
-                    <label for="lat" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Breitengrad</label>
-                    <input type="text" id="lat" name="lat" value="{{ current_lat }}"
-                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium">
-                </div>
-                <div>
-                    <label for="lng" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Längengrad</label>
-                    <input type="text" id="lng" name="lng" value="{{ current_lng }}"
-                           class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium">
-                </div>
-                <div class="lg:col-span-2">
-                    <label for="rad" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Umkreis: <span class="text-blue-600">{{ current_radius }} km</span></label>
-                    <div class="flex items-center gap-6 bg-gray-50 px-4 py-3 border border-gray-200 rounded-2xl">
-                        <input type="range" id="rad" name="rad" min="1.5" max="25" step="0.5" value="{{ current_radius }}"
-                               class="flex-grow h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-                               oninput="this.closest('div').previousElementSibling.querySelector('span').textContent = this.value + ' km'">
+        <div class="mb-12">
+            {% if api_error %}
+                <div class="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-4 text-red-700">
+                    <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-xl">
+                        ⚠️
+                    </div>
+                    <div>
+                        <div class="font-bold">Dienst vorübergehend nicht verfügbar</div>
+                        <div class="text-sm opacity-80">Wir können aktuell keine Live-Preise von Tankerkönig abrufen. Es werden ggf. veraltete Daten angezeigt.</div>
                     </div>
                 </div>
+            {% endif %}
 
-                <div class="lg:col-span-3">
-                    <span class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Kraftstoffarten</span>
-                    <div class="flex flex-wrap gap-4">
-                        {% for fuel in ['diesel', 'e5', 'e10'] %}
-                            <label class="relative flex items-center group cursor-pointer">
-                                <input type="checkbox" name="fuels[]" value="{{ fuel }}" {% if fuel in selected_fuels %}checked{% endif %} class="sr-only peer">
-                                <div class="px-6 py-2 rounded-xl border-2 border-gray-100 bg-white peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 hover:border-blue-200 transition-all font-bold text-gray-500 uppercase text-xs tracking-widest">
-                                    {{ fuel }}
+            <form method="get" action="{{ path('app_home') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {# Standort Auswahl #}
+                <div class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full">
+                    <label class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        Standort
+                    </label>
+
+                    {% if app.user %}
+                        <div class="relative group">
+                            <select id="address_select" class="w-full pl-4 pr-10 py-4 bg-gray-50 border-0 rounded-2xl text-gray-900 font-semibold focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer transition-all"
+                                    onchange="const option = this.options[this.selectedIndex]; document.getElementById('lat').value = option.dataset.lat; document.getElementById('lng').value = option.dataset.lng; this.form.submit();">
+                                <option value="default"
+                                        data-lat="{{ default_address_coords.lat }}"
+                                        data-lng="{{ default_address_coords.lng }}"
+                                        {% if not current_address %}selected{% endif %}>
+                                    {{ default_address.name }} ({{ default_address.city }})
+                                </option>
+                                {% for address in user_addresses %}
+                                    <option value="{{ address.id }}"
+                                            data-lat="{{ address.lat }}"
+                                            data-lng="{{ address.lng }}"
+                                            {% if current_address and current_address.id == address.id %}selected{% endif %}>
+                                        {{ address.name }} ({{ address.street }}, {{ address.city }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-blue-500 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <input type="hidden" id="lat" name="lat" value="{{ current_lat }}">
+                        <input type="hidden" id="lng" name="lng" value="{{ current_lng }}">
+                    {% else %}
+                        <input type="hidden" id="lat" name="lat" value="{{ current_lat }}">
+                        <input type="hidden" id="lng" name="lng" value="{{ current_lng }}">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex items-center gap-4 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                                <div class="flex-grow">
+                                    <div class="font-bold text-gray-900">{{ default_address.name }}</div>
+                                    <div class="text-sm text-gray-500">{{ default_address.street }}, {{ default_address.city }}</div>
                                 </div>
-                            </label>
-                        {% endfor %}
-                    </div>
+                            </div>
+                            <a href="{{ path('app_login') }}" class="group flex items-center justify-between p-4 bg-white hover:bg-gray-50 border border-gray-100 rounded-2xl transition-all shadow-sm">
+                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Eigene Adressen nutzen</span>
+                                <div class="p-2 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
 
-                <div class="lg:col-span-1">
-                    <button type="submit" class="w-full py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                {# Filter & Radius #}
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                                Kraftstoff
+                            </label>
+                            <div class="inline-flex p-1 bg-gray-50 rounded-2xl w-full">
+                                {% for fuel in ['diesel', 'e5', 'e10'] %}
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="fuel" value="{{ fuel }}" {% if fuel == selected_fuel %}checked{% endif %} class="sr-only peer" onchange="this.form.submit()">
+                                        <div class="py-3 text-center rounded-xl transition-all font-bold text-gray-500 uppercase text-xs tracking-widest peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-sm">
+                                            {{ fuel }}
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <label for="rad" class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.492V4.508a2 2 0 011.553-1.944L9 1l6 3 5.447-2.724A2 2 0 0121 3.224v10.984a2 2 0 01-1.553 1.944L15 19l-6 1z" />
+                                    </svg>
+                                    Umkreis
+                                </label>
+                                <span class="text-sm font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
+                                    {{ current_radius }} km
+                                </span>
+                            </div>
+                            <div class="flex flex-col gap-4">
+                                <div class="relative flex items-center h-10">
+                                    <input type="range" id="rad" name="rad" min="1.5" max="{{ app.user ? 25 : 5 }}" step="0.5" value="{{ current_radius }}"
+                                           class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                           oninput="this.closest('div').previousElementSibling.querySelector('span').textContent = this.value + ' km'"
+                                           onchange="this.form.submit()">
+                                </div>
+                                {% if not app.user %}
+                                    <a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2 py-2 px-4 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        Login für bis zu 25km
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="mt-8 w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-gray-200 active:scale-[0.98] flex items-center justify-center gap-3 group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
                         </svg>
-                        Aktualisieren
+                        Ergebnisse aktualisieren
                     </button>
                 </div>
             </form>
@@ -61,9 +150,22 @@
                 <div class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col">
                     <div class="p-6 flex-grow">
                         <div class="flex justify-between items-start mb-4">
-                            <span class="inline-block px-3 py-1 rounded-lg bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-100">
-                                {{ station.brand|default('Tankstelle') }}
-                            </span>
+                            <div class="flex flex-col gap-2">
+                                <span class="inline-block px-3 py-1 rounded-lg bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                                    {{ station.brand|default('Tankstelle') }}
+                                </span>
+                                {% if app.user %}
+                                    <button
+                                        data-favorite-toggle="{{ path('app_favorite_toggle', {uuid: station.uuid}) }}"
+                                        class="favorite-btn inline-flex items-center justify-center p-2 rounded-xl transition-all {{ app.user.favorites.contains(station) ? 'text-yellow-400 bg-yellow-50' : 'text-gray-300 bg-gray-50 hover:text-yellow-400' }}"
+                                        title="{{ app.user.favorites.contains(station) ? 'Von Favoriten entfernen' : 'Zu Favoriten hinzufügen' }}"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="{{ app.user.favorites.contains(station) ? 'currentColor' : 'none' }}" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.175 0l-3.976 2.888c-.784.57-1.838-.197-1.539-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                        </svg>
+                                    </button>
+                                {% endif %}
+                            </div>
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-bold text-gray-400 flex items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -85,35 +187,29 @@
                             </a>
                         </h2>
 
-                        <p class="text-sm text-gray-500 mb-6 line-clamp-2">
+                        <p class="text-sm text-gray-500 mb-6 line-clamp-2 truncate">
                             {{ station.street }} {{ station.houseNumber }}, {{ station.postCode }} {{ station.place }}
                         </p>
 
                         <div class="space-y-3">
-                            {% if 'diesel' in selected_fuels %}
-                                <div class="flex justify-between items-center p-3 rounded-2xl bg-gray-50 border border-transparent group-hover:border-gray-100 transition-all">
-                                    <span class="text-xs font-bold text-gray-400 uppercase">Diesel</span>
-                                    <span class="text-lg font-black text-gray-900">
-                                        {{ station.diesel ? station.diesel|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 text-gray-400">€</span>
-                                    </span>
-                                </div>
-                            {% endif %}
-                            {% if 'e5' in selected_fuels %}
-                                <div class="flex justify-between items-center p-3 rounded-2xl bg-blue-50/30 border border-transparent group-hover:border-blue-100 transition-all">
-                                    <span class="text-xs font-bold text-blue-400 uppercase">Super E5</span>
-                                    <span class="text-lg font-black text-blue-700">
-                                        {{ station.e5 ? station.e5|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 text-blue-400">€</span>
-                                    </span>
-                                </div>
-                            {% endif %}
-                            {% if 'e10' in selected_fuels %}
-                                <div class="flex justify-between items-center p-3 rounded-2xl bg-indigo-50/30 border border-transparent group-hover:border-indigo-100 transition-all">
-                                    <span class="text-xs font-bold text-indigo-400 uppercase">Super E10</span>
-                                    <span class="text-lg font-black text-indigo-700">
-                                        {{ station.e10 ? station.e10|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 text-indigo-400">€</span>
-                                    </span>
-                                </div>
-                            {% endif %}
+                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'diesel' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
+                                <span class="text-xs font-bold {% if selected_fuel == 'diesel' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Diesel</span>
+                                <span class="text-lg font-black {% if selected_fuel == 'diesel' %}text-blue-700{% else %}text-gray-900{% endif %}">
+                                    {{ station.diesel ? station.diesel|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'diesel' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'e5' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
+                                <span class="text-xs font-bold {% if selected_fuel == 'e5' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Super E5</span>
+                                <span class="text-lg font-black {% if selected_fuel == 'e5' %}text-blue-700{% else %}text-gray-900{% endif %}">
+                                    {{ station.e5 ? station.e5|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'e5' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'e10' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
+                                <span class="text-xs font-bold {% if selected_fuel == 'e10' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Super E10</span>
+                                <span class="text-lg font-black {% if selected_fuel == 'e10' %}text-blue-700{% else %}text-gray-900{% endif %}">
+                                    {{ station.e10 ? station.e10|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'e10' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -131,4 +227,46 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const url = btn.dataset.favoriteToggle;
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            const svg = btn.querySelector('svg');
+
+                            if (data.isFavorite) {
+                                btn.classList.remove('text-gray-300', 'bg-gray-50');
+                                btn.classList.add('text-yellow-400', 'bg-yellow-50');
+                                svg.setAttribute('fill', 'currentColor');
+                                btn.title = 'Von Favoriten entfernen';
+                            } else {
+                                btn.classList.remove('text-yellow-400', 'bg-yellow-50');
+                                btn.classList.add('text-gray-300', 'bg-gray-50');
+                                svg.setAttribute('fill', 'none');
+                                btn.title = 'Zu Favoriten hinzufügen';
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error toggling favorite:', error);
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}

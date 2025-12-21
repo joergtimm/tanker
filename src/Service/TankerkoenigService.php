@@ -8,31 +8,52 @@ use App\Entity\StationDetail;
 use App\Entity\OpeningTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Psr\Log\LoggerInterface;
 
 class TankerkoenigService
 {
     private const API_KEY = 'a2ad9604-4f9f-0021-5fb3-e8e150cb670b';
+    private bool $lastRequestFailed = false;
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly LoggerInterface $logger
     ) {
+    }
+
+    public function lastRequestFailed(): bool
+    {
+        return $this->lastRequestFailed;
     }
 
     public function fetchStations(string $lat, string $lng, float $radius): array
     {
-        $response = $this->httpClient->request(
-            'GET',
-            sprintf(
-                'https://creativecommons.tankerkoenig.de/json/list.php?lat=%s&lng=%s&rad=%s&sort=dist&type=all&apikey=%s',
-                $lat,
-                $lng,
-                $radius,
-                self::API_KEY
-            )
-        );
+        $this->lastRequestFailed = false;
+        try {
+            $response = $this->httpClient->request(
+                'GET',
+                sprintf(
+                    'https://creativecommons.tankerkoenig.de/json/list.php?lat=%s&lng=%s&rad=%s&sort=dist&type=all&apikey=%s',
+                    $lat,
+                    $lng,
+                    $radius,
+                    self::API_KEY
+                )
+            );
 
-        $data = $response->toArray();
+            if ($response->getStatusCode() !== 200) {
+                $this->logger->error('Tankerkoenig API returned status code ' . $response->getStatusCode());
+                $this->lastRequestFailed = true;
+                return [];
+            }
+
+            $data = $response->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Tankerkoenig API error: ' . $e->getMessage());
+            $this->lastRequestFailed = true;
+            return [];
+        }
         $stationsData = $data['stations'] ?? [];
 
         $stationIds = [];
@@ -49,7 +70,11 @@ class TankerkoenigService
             $station->setPlace($sData['place'] ?? null);
             $station->setLat((string)($sData['lat'] ?? null));
             $station->setLng((string)($sData['lng'] ?? null));
-            $station->setDistance((string)($sData['dist'] ?? 0));
+
+            // Distanz berechnen
+            $distance = $this->calculateDistance($lat, $lng, $station->getLat(), $station->getLng());
+            $station->setDistance((string)round($distance, 2));
+
             $station->setIsOpen((bool)($sData['isOpen'] ?? false));
 
             $this->entityManager->persist($station);
@@ -66,17 +91,44 @@ class TankerkoenigService
         return $stationIds;
     }
 
+    private function calculateDistance(string $lat1, string $lng1, string $lat2, string $lng2): float
+    {
+        $earthRadius = 6371; // km
+
+        $latDelta = deg2rad((float)$lat2 - (float)$lat1);
+        $lonDelta = deg2rad((float)$lng2 - (float)$lng1);
+
+        $a = sin($latDelta / 2) * sin($latDelta / 2) +
+            cos(deg2rad((float)$lat1)) * cos(deg2rad((float)$lat2)) *
+            sin($lonDelta / 2) * sin($lonDelta / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        return $earthRadius * $c;
+    }
+
     private function fetchPrices(array $stationIds, array $stationsMap): void
     {
-        $pricesResponse = $this->httpClient->request(
-            'GET',
-            sprintf(
-                'https://creativecommons.tankerkoenig.de/json/prices.php?ids=%s&apikey=%s',
-                implode(',', $stationIds),
-                self::API_KEY
-            )
-        );
-        $pricesData = $pricesResponse->toArray();
+        try {
+            $pricesResponse = $this->httpClient->request(
+                'GET',
+                sprintf(
+                    'https://creativecommons.tankerkoenig.de/json/prices.php?ids=%s&apikey=%s',
+                    implode(',', $stationIds),
+                    self::API_KEY
+                )
+            );
+
+            if ($pricesResponse->getStatusCode() !== 200) {
+                $this->logger->error('Tankerkoenig Prices API returned status code ' . $pricesResponse->getStatusCode());
+                return;
+            }
+
+            $pricesData = $pricesResponse->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Tankerkoenig Prices API error: ' . $e->getMessage());
+            return;
+        }
 
         if (isset($pricesData['prices'])) {
             foreach ($pricesData['prices'] as $uuid => $pData) {
@@ -106,16 +158,26 @@ class TankerkoenigService
             return null;
         }
 
-        $response = $this->httpClient->request(
-            'GET',
-            sprintf(
-                'https://creativecommons.tankerkoenig.de/json/detail.php?id=%s&apikey=%s',
-                $uuid,
-                self::API_KEY
-            )
-        );
+        try {
+            $response = $this->httpClient->request(
+                'GET',
+                sprintf(
+                    'https://creativecommons.tankerkoenig.de/json/detail.php?id=%s&apikey=%s',
+                    $uuid,
+                    self::API_KEY
+                )
+            );
 
-        $data = $response->toArray();
+            if ($response->getStatusCode() !== 200) {
+                $this->logger->error('Tankerkoenig Detail API returned status code ' . $response->getStatusCode());
+                return $station;
+            }
+
+            $data = $response->toArray();
+        } catch (\Exception $e) {
+            $this->logger->error('Tankerkoenig Detail API error: ' . $e->getMessage());
+            return $station;
+        }
 
         if (!isset($data['station'])) {
             return $station;

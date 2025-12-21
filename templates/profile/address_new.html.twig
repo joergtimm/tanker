@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Neue Adresse{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50 py-12">
+    <div class="container mx-auto px-4 max-w-2xl">
+        <header class="mb-12">
+            <h1 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Neue Adresse hinzufügen</h1>
+            <p class="text-lg text-gray-600 font-medium">Geben Sie die Details Ihrer neuen Adresse ein.</p>
+        </header>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="p-8">
+                {{ form_start(form) }}
+                    <div class="space-y-6">
+                        <div>
+                            {{ form_label(form.name, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                            {{ form_widget(form.name, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                {{ form_label(form.street, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                                {{ form_widget(form.street, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                            </div>
+                            <div>
+                                {{ form_label(form.postCode, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                                {{ form_widget(form.postCode, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                            </div>
+                            <div>
+                                {{ form_label(form.city, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                                {{ form_widget(form.city, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                {{ form_label(form.lat, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                                {{ form_widget(form.lat, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                            </div>
+                            <div>
+                                {{ form_label(form.lng, null, {'label_attr': {'class': 'block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2'}}) }}
+                                {{ form_widget(form.lng, {'attr': {'class': 'w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium'}}) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4">
+                        <button type="submit" class="flex-grow py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95">
+                            Speichern
+                        </button>
+                        <a href="{{ path('app_profile') }}" class="px-8 py-3.5 bg-gray-100 text-gray-600 rounded-2xl font-bold hover:bg-gray-200 transition-all active:scale-95">
+                            Abbrechen
+                        </a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

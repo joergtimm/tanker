@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Datenbank-Schema{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+                Datenbank <span class="text-blue-600">Schema</span>
+            </h1>
+            <p class="text-gray-600 text-lg">Visualisierung der Tabellen-Relationen und Entitäten.</p>
+        </header>
+
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden"
+             {{ stimulus_controller('er-diagramm') }}>
+            <div class="flex flex-col lg:flex-row">
+                <!-- Diagramm Bereich (2/3) -->
+                <div class="lg:w-2/3 p-4 lg:p-8 flex justify-center items-center min-h-[650px] bg-white border-b lg:border-b-0 lg:border-r border-gray-100">
+                    <div data-er-diagramm-target="container" class="w-full h-full flex items-center justify-center">
+                        <!-- Mermaid diagram will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Erläuterungen Bereich (1/3) -->
+                <div class="lg:w-1/3 p-8 lg:p-10 bg-white">
+                    <section class="mb-10">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Erläuterung der Relationen</h3>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">1</span>
+                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">User ↔ Address (1:n):</span> Ein Benutzer kann mehrere gespeicherte Adressen haben (z.B. Home, Work).</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">2</span>
+                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">User ↔ Station (n:m):</span> Benutzer können Tankstellen als Favoriten markieren. Dies wird über eine Join-Tabelle (standardmäßig user_station) realisiert.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">3</span>
+                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">Station ↔ StationDetail (1:1):</span> Zusätzliche Details (wie Bundesland oder rohe JSON-Öffnungszeiten) sind in einer separaten Tabelle ausgelagert, um die Haupttabelle schlank zu halten.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">4</span>
+                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">Station ↔ Price (1:n):</span> Ermöglicht die Speicherung einer Historie von Kraftstoffpreisen für jede Tankstelle.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">5</span>
+                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">StationDetail ↔ OpeningTime (1:n):</span> Strukturierte Öffnungszeiten, die mit einem Detail-Datensatz verknüpft sind.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Technische Details</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
+                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span><span class="font-semibold">Identifikatoren:</span> Alle Tabellen verwenden eine Auto-Increment id als Primärschlüssel.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
+                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span><span class="font-semibold">UUID:</span> Die Station verwendet zusätzlich eine uuid (wahrscheinlich von der Tankerkönig-API), die als eindeutiger fachlicher Schlüssel dient.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
+                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                <span><span class="font-semibold">Koordinaten:</span> Breiten- und Längengrade (lat, lng) werden als decimal gespeichert, um Präzisionsverlust zu vermeiden.</span>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+            <div class="bg-gray-50 px-8 py-6 border-t border-gray-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span class="text-gray-600 font-medium">Primärschlüssel (PK)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
+                        <span class="text-gray-600 font-medium">Fremdschlüssel (FK)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                        <span class="text-gray-600 font-medium">Unique Constraints (UK)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -21,8 +21,9 @@
                             <a href="{{ path('app_home') }}" class="text-xl font-black text-blue-600 tracking-tighter">NIG TANKER</a>
                         </div>
                     </div>
-                    <div class="flex items-center gap-4">
-                        {% if app.user %}
+                        <div class="flex items-center gap-4">
+                            <a href="{{ path('app_schema') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Schema</a>
+                            {% if app.user %}
                             <a href="{{ path('app_favorites') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Favoriten</a>
                             <a href="{{ path('app_profile') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Profil</a>
                             <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ app.user.userIdentifier }}</span>

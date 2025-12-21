@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ErController!{% endblock %}
+
+{% block body %}
+    <pre class="mermaid">
+    erDiagram
+    USER ||--o{ ADDRESS : "besitzt"
+    USER }o--o{ STATION : "Favoriten"
+    STATION ||--o| STATION_DETAIL : "Details"
+    STATION ||--o{ PRICE : "Historie"
+    STATION_DETAIL ||--o{ OPENING_TIME : "Öffnungszeiten"
+
+    USER {
+        int id PK
+        string email UK
+        string password
+        json roles
+        bool is_verified
+    }
+
+    ADDRESS {
+        int id PK
+        int user_id FK
+        string name
+        string street
+        string post_code
+        string city
+        decimal lat
+        decimal lng
+    }
+
+    STATION {
+        int id PK
+        string uuid UK
+        string name
+        string brand
+        string street
+        string house_number
+        string post_code
+        string place
+        decimal lat
+        decimal lng
+    }
+
+    STATION_DETAIL {
+        int id PK
+        int station_id FK, UK
+        json opening_times
+        json overrides
+        bool whole_day
+        string state
+    }
+
+    OPENING_TIME {
+        int id PK
+        int station_detail_id FK
+        string text
+        string start
+        string end
+    }
+
+    PRICE {
+        int id PK
+        int station_id FK
+        decimal diesel
+        decimal e5
+        decimal e10
+        datetime created_at
+    }
+    </pre>
+    <div>
+        Erläuterung der Relationen
+        1.
+        User ↔ Address (1:n): Ein Benutzer kann mehrere gespeicherte Adressen haben (z.B. Home, Work).
+        2.
+        User ↔ Station (n:m): Benutzer können Tankstellen als Favoriten markieren. Dies wird über eine Join-Tabelle (standardmäßig user_station) realisiert.
+        3.
+        Station ↔ StationDetail (1:1): Zusätzliche Details (wie Bundesland oder rohe JSON-Öffnungszeiten) sind in einer separaten Tabelle ausgelagert, um die Haupttabelle schlank zu halten.
+        4.
+        Station ↔ Price (1:n): Ermöglicht die Speicherung einer Historie von Kraftstoffpreisen für jede Tankstelle.
+        5.
+        StationDetail ↔ OpeningTime (1:n): Strukturierte Öffnungszeiten, die mit einem Detail-Datensatz verknüpft sind.
+    </div>
+    <div>
+        Technische Details
+        •
+        Identifikatoren: Alle Tabellen verwenden eine Auto-Increment id als Primärschlüssel.
+        •
+        UUID: Die Station verwendet zusätzlich eine uuid (wahrscheinlich von der Tankerkönig-API), die als eindeutiger fachlicher Schlüssel dient.
+        •
+        Koordinaten: Breiten- und Längengrade (lat, lng) werden als decimal gespeichert, um Präzisionsverlust zu vermeiden.
+    </div>
+{% endblock %}

@@ -33,6 +33,16 @@
                         Standort
                     </label>
 
+                    <div class="mb-6 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                        {% if current_address %}
+                            <div class="font-bold text-gray-900">{{ current_address.name }}</div>
+                            <div class="text-sm text-gray-500">{{ current_address.street }}, {{ current_address.city }}</div>
+                        {% else %}
+                            <div class="font-bold text-gray-900">{{ default_address.name }}</div>
+                            <div class="text-sm text-gray-500">{{ default_address.street }}, {{ default_address.city }}</div>
+                        {% endif %}
+                    </div>
+
                     {% if app.user %}
                         <div class="relative group">
                             <select id="address_select" class="w-full pl-4 pr-10 py-4 bg-gray-50 border-0 rounded-2xl text-gray-900 font-semibold focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer transition-all"
@@ -64,12 +74,6 @@
                         <input type="hidden" id="lat" name="lat" value="{{ current_lat }}">
                         <input type="hidden" id="lng" name="lng" value="{{ current_lng }}">
                         <div class="flex flex-col gap-4">
-                            <div class="flex items-center gap-4 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
-                                <div class="flex-grow">
-                                    <div class="font-bold text-gray-900">{{ default_address.name }}</div>
-                                    <div class="text-sm text-gray-500">{{ default_address.street }}, {{ default_address.city }}</div>
-                                </div>
-                            </div>
                             <a href="{{ path('app_login') }}" class="group flex items-center justify-between p-4 bg-white hover:bg-gray-50 border border-gray-100 rounded-2xl transition-all shadow-sm">
                                 <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Eigene Adressen nutzen</span>
                                 <div class="p-2 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">

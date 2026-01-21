@@ -1,0 +1,26 @@
+{{ form_start(form) }}
+    <div class="space-y-4">
+        <div>
+            {{ form_label(form.email, 'Email-Adresse', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.email, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.email) }}
+        </div>
+        <div>
+            {{ form_label(form.roles, 'Rollen', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            <div class="mt-2 space-y-2">
+                {{ form_widget(form.roles) }}
+            </div>
+            {{ form_errors(form.roles) }}
+        </div>
+        <div class="flex items-center">
+            {{ form_widget(form.isVerified, {'attr': {'class': 'h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded'}}) }}
+            {{ form_label(form.isVerified, 'Verifiziert', {'label_attr': {'class': 'ml-2 block text-sm text-gray-900'}}) }}
+            {{ form_errors(form.isVerified) }}
+        </div>
+    </div>
+    <div class="mt-6">
+        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+            {{ button_label|default('Speichern') }}
+        </button>
+    </div>
+{{ form_end(form) }}

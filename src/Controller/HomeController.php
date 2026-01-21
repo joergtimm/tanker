@@ -22,10 +22,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 // Importiert diverse HttpClient-Exceptions für das Fehlerhandling
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 // Die HomeController-Klasse, die die Hauptseite verwaltet
 final class HomeController extends AbstractController
@@ -42,10 +40,8 @@ final class HomeController extends AbstractController
     } // Ende des Konstruktors
 
     /**
-     * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
     // Definiert die Route für die Startseite

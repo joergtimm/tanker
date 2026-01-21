@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="flex h-screen bg-gray-100" x-data="{ open: false, profileOpen: false }">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-200 hidden md:block">
+        <div class="p-6">
+            <a href="{{ path('admin_dashboard') }}" class="text-xl font-black text-blue-600 tracking-tighter">ADMIN PANEL</a>
+        </div>
+        <nav class="mt-6">
+            <a href="{{ path('admin_dashboard') }}" class="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : '' }}">
+                <span class="mx-3">Dashboard</span>
+            </a>
+            <a href="{{ path('admin_user_index') }}" class="flex items-center px-6 py-3 mt-2 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors {{ app.request.attributes.get('_route') starts with 'admin_user_' ? 'bg-blue-50 text-blue-600 border-r-4 border-blue-600' : '' }}">
+                <span class="mx-3">Benutzer</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Content Area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Topbar -->
+        <header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
+            <div class="flex items-center">
+                <button @click="open = !open" class="text-gray-500 focus:outline-none md:hidden">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="relative">
+                <button @click="profileOpen = !profileOpen" class="flex items-center focus:outline-none">
+                    <span class="text-sm font-semibold text-gray-700 mr-2">{{ app.user.userIdentifier }}</span>
+                    <div class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                        {{ app.user.userIdentifier|first|upper }}
+                    </div>
+                </button>
+
+                <!-- Dropdown menu -->
+                <div x-show="profileOpen" @click.away="profileOpen = false" class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg py-1 z-50">
+                    <a href="{{ path('app_profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors">Mein Profil</a>
+                    <hr class="my-1 border-gray-100">
+                    <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Abmelden</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+</div>
+
+<!-- Mobile Sidebar Overlay -->
+<div x-show="open" @click="open = false" class="fixed inset-0 z-40 bg-black opacity-50 md:hidden"></div>
+<!-- Mobile Sidebar -->
+<div x-show="open" class="fixed inset-y-0 left-0 z-50 w-64 bg-white transform md:hidden transition-transform duration-300 ease-in-out" :class="open ? 'translate-x-0' : '-translate-x-full'">
+    <div class="p-6">
+        <a href="{{ path('admin_dashboard') }}" class="text-xl font-black text-blue-600 tracking-tighter">ADMIN PANEL</a>
+    </div>
+    <nav class="mt-6">
+        <a href="{{ path('admin_dashboard') }}" class="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50">Dashboard</a>
+        <a href="{{ path('admin_user_index') }}" class="flex items-center px-6 py-3 mt-2 text-gray-600 hover:bg-blue-50">Benutzer</a>
+    </nav>
+</div>
+{% endblock %}

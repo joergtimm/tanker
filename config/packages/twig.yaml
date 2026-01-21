@@ -1,5 +1,10 @@
 twig:
     file_name_pattern: '*.twig'
+    date:
+        timezone: 'Europe/Berlin'
+
+    form_themes:
+        - 'tailwind_2_layout.html.twig'
 
 when@test:
     twig:

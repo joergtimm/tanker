@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="2ec89a25-e831-44c1-a13b-99b21c06aff8" name="nig-tanker.de" url="https://tanker.de">
+        <fileTransfer rootFolder="/nig-tanker.de/httpdocs" accessType="SFTP" host="nig-tanker.de" port="22" sshConfigId="0bac0319-cd76-4f09-8ff1-02e8e1b3165b" sshConfig="nig-tanker.de_an9kyhihi35@nig-tanker.de:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

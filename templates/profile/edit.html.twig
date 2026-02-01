@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil bearbeiten{% endblock %}
+
+{% block body %}
+<div class="py-12 md:py-20 bg-slate-50">
+    <div class="container mx-auto px-4 max-w-3xl">
+        <header class="mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">Profil <span class="text-blue-600">bearbeiten.</span></h1>
+            <p class="text-lg md:text-xl text-slate-500 font-medium leading-relaxed">Aktualisieren Sie Ihren Vornamen und Nachnamen.</p>
+        </header>
+
+        <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+            <div class="p-8 md:p-12">
+                {{ form_start(form, {'attr': {'class': 'space-y-8'}}) }}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            {{ form_label(form.firstName, null, {'label_attr': {'class': 'block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1'}}) }}
+                            {{ form_widget(form.firstName, {'attr': {'class': 'w-full bg-slate-50 p-4 rounded-2xl border border-slate-100 font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                            {{ form_errors(form.firstName, {'attr': {'class': 'text-red-500 text-xs mt-1'}}) }}
+                        </div>
+                        <div class="space-y-2">
+                            {{ form_label(form.lastName, null, {'label_attr': {'class': 'block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] ml-1'}}) }}
+                            {{ form_widget(form.lastName, {'attr': {'class': 'w-full bg-slate-50 p-4 rounded-2xl border border-slate-100 font-bold text-slate-900 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all'}}) }}
+                            {{ form_errors(form.lastName, {'attr': {'class': 'text-red-500 text-xs mt-1'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                        <button type="submit" class="flex-grow px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 text-lg">
+                            Speichern
+                        </button>
+                        <a href="{{ path('app_profile') }}" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all text-center text-lg">
+                            Abbrechen
+                        </a>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

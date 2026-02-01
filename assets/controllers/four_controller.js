@@ -7,6 +7,9 @@ import { Controller } from '@hotwired/stimulus';
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ["board", "modalContainer", "modalMessage", "resetButton"];
+    static values = {
+        moveUrl: String
+    };
 
     RED_TURN = 1;
     YELLOW_TURN = 2;
@@ -39,7 +42,7 @@ export default class extends Controller {
 
         for (let i = 0; i < 42; i++) {
             let cell = document.createElement("div");
-            cell.className = "relative flex shadow-[6px_6px_10px_hsla(0,20%,2%,0.7)_inset] before:absolute before:content-[''] before:inset-0 before:bg-[radial-gradient(circle,transparent_65%,rgba(30,64,175,1)_65%)] before:z-[10]";
+            cell.className = "relative flex shadow-[inset_0_4px_8px_rgba(0,0,0,0.6)] before:absolute before:content-[''] before:inset-0 before:bg-[radial-gradient(circle,transparent_65%,rgba(30,64,175,1)_65%)] before:z-[10] bg-blue-800/10";
             cell.dataset.index = i % 7;
             this.boardTarget.appendChild(cell);
 
@@ -64,14 +67,32 @@ export default class extends Controller {
         }
 
         this.pieces[(availableRow * 7) + column] = this.playerTurn;
-        let cell = this.boardTarget.children[(availableRow * 7) + column];
+        let boardIndex = (availableRow * 7) + column;
+
+        // Send move to backend
+        if (this.hasMoveUrlValue) {
+            fetch(this.moveUrlValue, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    column: column,
+                    boardIndex: boardIndex,
+                    playerNumber: this.playerTurn,
+                    allPieces: this.pieces // Send all pieces as requested
+                }),
+            });
+        }
+
+        let cell = this.boardTarget.children[boardIndex];
 
         let piece = document.createElement("div");
-        let pieceClasses = "rounded-full grow m-[10%] shadow-[6px_6px_10px_hsla(0,20%,2%,0.7)_inset]";
+        let pieceClasses = "rounded-full grow m-[10%] z-20 shadow-[inset_0_4px_6px_rgba(0,0,0,0.4),_inset_0_-4px_6px_rgba(255,255,255,0.2),_0_6px_10px_rgba(0,0,0,0.5)]";
         if (this.playerTurn === this.RED_TURN) {
-            pieceClasses += " bg-red-500/60 shadow-[6px_6px_10px_hsla(0,20%,2%,0.8)_inset]";
+            pieceClasses += " bg-gradient-to-br from-red-600 to-red-800";
         } else {
-            pieceClasses += " bg-[#f0fe02] shadow-[6px_6px_10px_hsla(0,20%,2%,0.8)_inset]";
+            pieceClasses += " bg-gradient-to-br from-yellow-300 to-yellow-500";
         }
         piece.className = pieceClasses;
         piece.dataset.placed = true;
@@ -108,16 +129,18 @@ export default class extends Controller {
       // check if game is a draw
         if (!this.pieces.includes(0)) {
           // game is a draw
-            this.modalContainerTarget.style.display = "block";
+            this.modalContainerTarget.classList.remove('hidden');
             this.modalMessageTarget.textContent = "Draw";
+            return;
         }
 
-      // check if the current player has won
+        // check if the current player has won
         if (this.hasPlayerWon(this.playerTurn, this.pieces)) {
           // current player has won
-            this.modalContainerTarget.style.display = "block";
+            this.modalContainerTarget.classList.remove('hidden');
             this.modalMessageTarget.textContent = `${this.playerTurn === this.RED_TURN ? "rot" : "gelb"} hat gewonnen!`;
             this.modalMessageTarget.dataset.winner = this.playerTurn;
+            return; // Stop further execution if game is won
         }
 
         this.playerTurn = (this.playerTurn === this.RED_TURN) ? this.YELLOW_TURN : this.RED_TURN;
@@ -136,11 +159,11 @@ export default class extends Controller {
         if (this.pieces[this.hoverColumn] === 0) {
             let cell = this.boardTarget.children[this.hoverColumn];
             let piece = document.createElement("div");
-            let pieceClasses = "rounded-full grow m-[10%] -translate-y-full";
+            let pieceClasses = "rounded-full grow m-[10%] -translate-y-[110%] z-20 shadow-[inset_0_4px_6px_rgba(0,0,0,0.4),_inset_0_-4px_6px_rgba(255,255,255,0.2),0_10px_15px_rgba(0,0,0,0.4)] transition-transform duration-200";
             if (this.playerTurn === this.RED_TURN) {
-                pieceClasses += " bg-red-500/60";
+                pieceClasses += " bg-gradient-to-br from-red-600/60 to-red-800/60";
             } else {
-                pieceClasses += " bg-[#f0fe02]";
+                pieceClasses += " bg-gradient-to-br from-yellow-300/60 to-yellow-500/60";
             }
             piece.className = pieceClasses;
             piece.dataset.placed = false;

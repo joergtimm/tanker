@@ -6,6 +6,8 @@ namespace App\Controller;
 use App\Entity\Address;
 // Importiert den AddressType für das Formular
 use App\Form\AddressType;
+// Importiert den UserProfileType für das Formular
+use App\Form\UserProfileType;
 // Importiert den EntityManagerInterface für Datenbankoperationen
 use Doctrine\ORM\EntityManagerInterface;
 // Importiert den Basis-Controller von Symfony
@@ -37,6 +39,24 @@ class ProfileController extends AbstractController
             'user' => $this->getUser(),
         ]); // Ende des render-Aufrufs
     } // Ende der index-Methode
+
+    #[Route('/edit', name: 'app_profile_edit')]
+    public function edit(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->render('profile/edit.html.twig', [
+            'form' => $form,
+        ]);
+    }
 
     // Definiert die Route zum Erstellen einer neuen Adresse
     #[Route('/address/new', name: 'app_address_new')]

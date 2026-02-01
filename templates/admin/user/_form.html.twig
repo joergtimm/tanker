@@ -6,6 +6,16 @@
             {{ form_errors(form.email) }}
         </div>
         <div>
+            {{ form_label(form.firstName, 'Vorname', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.firstName, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
+        <div>
+            {{ form_label(form.lastName, 'Nachname', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
+            {{ form_widget(form.lastName, {'attr': {'class': 'mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm'}}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+        <div>
             {{ form_label(form.roles, 'Rollen', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
             <div class="mt-2 space-y-2">
                 {{ form_widget(form.roles) }}

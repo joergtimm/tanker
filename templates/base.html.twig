@@ -32,8 +32,12 @@
                     <div class="hidden md:flex items-center gap-2">
                         <a href="{{ path('app_schema') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Schema</a>
                         {% if app.user %}
+                            <a href="{{ path('app_for_row') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">4 gewinnt</a>
                             <a href="{{ path('app_favorites') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Favoriten</a>
                             <a href="{{ path('app_profile') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Profil</a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('admin_dashboard') }}" class="px-4 py-2 text-sm font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-all">Admin</a>
+                            {% endif %}
                             <div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
                             <div class="flex items-center gap-3 pl-2">
                                 <span class="text-sm font-medium text-slate-500">{{ app.user.userIdentifier }}</span>
@@ -62,8 +66,12 @@
                  style="display: none;">
                 <a href="{{ path('app_schema') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Schema</a>
                 {% if app.user %}
+                    <a href="{{ path('app_for_row') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">4 gewinnt</a>
                     <a href="{{ path('app_favorites') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Favoriten</a>
                     <a href="{{ path('app_profile') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Profil</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_dashboard') }}" class="block px-4 py-3 text-sm font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl transition-all">Admin</a>
+                    {% endif %}
                     <div class="px-4 py-4 mt-2 border-t border-slate-100">
                         <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Eingeloggt als</span>
                         <span class="text-sm font-semibold text-slate-700">{{ app.user.userIdentifier }}</span>
@@ -100,8 +108,12 @@
                             <li><a href="{{ path('app_home') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Startseite</a></li>
                             <li><a href="{{ path('app_schema') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Schema</a></li>
                             {% if app.user %}
+                                <li><a href="{{ path('app_for_row') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">4 gewinnt</a></li>
                                 <li><a href="{{ path('app_favorites') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Favoriten</a></li>
                                 <li><a href="{{ path('app_profile') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Profil</a></li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li><a href="{{ path('admin_dashboard') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Admin</a></li>
+                                {% endif %}
                             {% endif %}
                         </ul>
                     </div>

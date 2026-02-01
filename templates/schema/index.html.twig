@@ -3,86 +3,106 @@
 {% block title %}Datenbank-Schema{% endblock %}
 
 {% block body %}
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-7xl mx-auto">
-        <header class="mb-12 text-center">
-            <h1 class="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
-                Datenbank <span class="text-blue-600">Schema</span>
-            </h1>
-            <p class="text-gray-600 text-lg">Visualisierung der Tabellen-Relationen und Entitäten.</p>
+<div class="py-12 md:py-20 bg-slate-50">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <header class="mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">Datenbank <span class="text-blue-600">Schema.</span></h1>
+            <p class="text-lg md:text-xl text-slate-500 font-medium max-w-2xl leading-relaxed">Visualisierung der Tabellen-Relationen und Entitäten der Tankstellen-App.</p>
         </header>
 
-        <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden"
+        <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden"
              {{ stimulus_controller('er-diagramm') }}>
             <div class="flex flex-col lg:flex-row">
                 <!-- Diagramm Bereich (2/3) -->
-                <div class="lg:w-2/3 p-4 lg:p-8 flex justify-center items-center min-h-[650px] bg-white border-b lg:border-b-0 lg:border-r border-gray-100">
+                <div class="lg:w-2/3 p-4 lg:p-12 flex justify-center items-center min-h-[700px] bg-white border-b lg:border-b-0 lg:border-r border-slate-100">
                     <div data-er-diagramm-target="container" class="w-full h-full flex items-center justify-center">
                         <!-- Mermaid diagram will be rendered here -->
+                        <div class="text-slate-300 animate-pulse flex flex-col items-center gap-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                            </svg>
+                            <span class="font-black uppercase text-xs tracking-widest">Lade Diagramm...</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Erläuterungen Bereich (1/3) -->
-                <div class="lg:w-1/3 p-8 lg:p-10 bg-white">
-                    <section class="mb-10">
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Erläuterung der Relationen</h3>
-                        <div class="space-y-6">
-                            <div class="flex gap-4">
-                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">1</span>
-                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">User ↔ Address (1:n):</span> Ein Benutzer kann mehrere gespeicherte Adressen haben (z.B. Home, Work).</p>
+                <div class="lg:w-1/3 p-10 lg:p-12 bg-white">
+                    <section class="mb-12">
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
                             </div>
-                            <div class="flex gap-4">
-                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">2</span>
-                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">User ↔ Station (n:m):</span> Benutzer können Tankstellen als Favoriten markieren. Dies wird über eine Join-Tabelle (standardmäßig user_station) realisiert.</p>
-                            </div>
-                            <div class="flex gap-4">
-                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">3</span>
-                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">Station ↔ StationDetail (1:1):</span> Zusätzliche Details (wie Bundesland oder rohe JSON-Öffnungszeiten) sind in einer separaten Tabelle ausgelagert, um die Haupttabelle schlank zu halten.</p>
-                            </div>
-                            <div class="flex gap-4">
-                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">4</span>
-                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">Station ↔ Price (1:n):</span> Ermöglicht die Speicherung einer Historie von Kraftstoffpreisen für jede Tankstelle.</p>
-                            </div>
-                            <div class="flex gap-4">
-                                <span class="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 text-blue-600 text-sm font-bold">5</span>
-                                <p class="text-gray-700 leading-relaxed"><span class="font-semibold">StationDetail ↔ OpeningTime (1:n):</span> Strukturierte Öffnungszeiten, die mit einem Detail-Datensatz verknüpft sind.</p>
-                            </div>
+                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Relationen</h3>
+                        </div>
+
+                        <div class="space-y-8">
+                            {% set relations = [
+                                {'title': 'User ↔ Address (1:n)', 'desc': 'Ein Benutzer kann mehrere gespeicherte Adressen haben (z.B. Home, Work).'},
+                                {'title': 'User ↔ Station (n:m)', 'desc': 'Benutzer können Tankstellen als Favoriten markieren (Join-Tabelle).'},
+                                {'title': 'Station ↔ Detail (1:1)', 'desc': 'Zusätzliche Daten wie Bundesland oder JSON-Öffnungszeiten.'},
+                                {'title': 'Station ↔ Price (1:n)', 'desc': 'Ermöglicht die Speicherung einer Historie von Kraftstoffpreisen.'},
+                                {'title': 'Detail ↔ Hours (1:n)', 'desc': 'Strukturierte Öffnungszeiten für jeden Wochentag.'}
+                            ] %}
+
+                            {% for rel in relations %}
+                                <div class="flex gap-5 group">
+                                    <span class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-200 transition-all text-xs font-black">{{ loop.index }}</span>
+                                    <div>
+                                        <p class="text-slate-900 font-bold text-sm mb-1">{{ rel.title }}</p>
+                                        <p class="text-slate-500 text-xs leading-relaxed font-medium">{{ rel.desc }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </section>
 
                     <section>
-                        <h3 class="text-xl font-bold text-gray-900 mb-6 pb-2 border-b border-gray-100">Technische Details</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
-                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                <span><span class="font-semibold">Identifikatoren:</span> Alle Tabellen verwenden eine Auto-Increment id als Primärschlüssel.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
-                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                <span><span class="font-semibold">UUID:</span> Die Station verwendet zusätzlich eine uuid (wahrscheinlich von der Tankerkönig-API), die als eindeutiger fachlicher Schlüssel dient.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-700 leading-relaxed">
-                                <svg class="w-5 h-5 text-emerald-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                <span><span class="font-semibold">Koordinaten:</span> Breiten- und Längengrade (lat, lng) werden als decimal gespeichert, um Präzisionsverlust zu vermeiden.</span>
-                            </li>
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-black text-slate-900 tracking-tight">Technik</h3>
+                        </div>
+
+                        <ul class="space-y-6">
+                            {% set techs = [
+                                {'label': 'PK', 'title': 'Identifikatoren', 'desc': 'Auto-Increment Integer IDs für alle Tabellen.'},
+                                {'label': 'UUID', 'title': 'Station UUID', 'desc': 'Eindeutiger fachlicher Schlüssel der API.'},
+                                {'label': 'DEC', 'title': 'Koordinaten', 'desc': 'Decimal-Format zur Vermeidung von Präzisionsverlust.'}
+                            ] %}
+
+                            {% for tech in techs %}
+                                <li class="flex items-start gap-4">
+                                    <div class="flex-shrink-0 w-10 text-[10px] font-black text-emerald-600 bg-emerald-50 px-1 py-1 rounded-md text-center border border-emerald-100 uppercase tracking-tighter">{{ tech.label }}</div>
+                                    <div>
+                                        <span class="block text-slate-900 font-bold text-sm mb-1">{{ tech.title }}</span>
+                                        <span class="block text-slate-500 text-xs font-medium leading-relaxed">{{ tech.desc }}</span>
+                                    </div>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </section>
                 </div>
             </div>
 
-            <div class="bg-gray-50 px-8 py-6 border-t border-gray-100">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-                        <span class="text-gray-600 font-medium">Primärschlüssel (PK)</span>
+            <div class="bg-slate-50 px-12 py-8 border-t border-slate-100">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="flex items-center gap-4">
+                        <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Primärschlüssel (PK)</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-indigo-400"></div>
-                        <span class="text-gray-600 font-medium">Fremdschlüssel (FK)</span>
+                    <div class="flex items-center gap-4">
+                        <div class="w-3 h-3 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)]"></div>
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Fremdschlüssel (FK)</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
-                        <span class="text-gray-600 font-medium">Unique Constraints (UK)</span>
+                    <div class="flex items-center gap-4">
+                        <div class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"></div>
+                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Unique Key (UK)</span>
                     </div>
                 </div>
             </div>

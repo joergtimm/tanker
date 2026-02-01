@@ -13,30 +13,116 @@
             <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         {% endblock %}
     </head>
-    <body class="bg-white text-gray-800">
-        <nav class="bg-white border-b border-gray-100 no-print" {% if app.request.attributes.get('_route') starts with 'admin_' %}style="display: none;"{% endif %}>
-            <div class="container mx-auto px-4 max-w-6xl">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <div class="flex-shrink-0 flex items-center">
-                            <a href="{{ path('app_home') }}" class="text-xl font-black text-blue-600 tracking-tighter">NIG TANKER</a>
-                        </div>
+    <body class="bg-slate-50 text-slate-900 font-sans antialiased">
+        <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200/60 no-print" {% if app.request.attributes.get('_route') starts with 'admin_' %}style="display: none;"{% endif %} x-data="{ mobileMenuOpen: false }">
+            <div class="container mx-auto px-4 max-w-7xl">
+                <div class="flex justify-between h-20">
+                    <div class="flex items-center">
+                        <a href="{{ path('app_home') }}" class="flex items-center gap-2 group">
+                            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="text-xl font-black text-slate-900 tracking-tight uppercase">Nig Tanker</span>
+                        </a>
                     </div>
-                        <div class="flex items-center gap-4">
-                            <a href="{{ path('app_schema') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Schema</a>
-                            {% if app.user %}
-                            <a href="{{ path('app_favorites') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Favoriten</a>
-                            <a href="{{ path('app_profile') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Profil</a>
-                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">{{ app.user.userIdentifier }}</span>
-                            <a href="{{ path('app_logout') }}" class="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-widest hover:text-blue-600 transition-colors">Abmelden</a>
+
+                    <!-- Desktop Menu -->
+                    <div class="hidden md:flex items-center gap-2">
+                        <a href="{{ path('app_schema') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Schema</a>
+                        {% if app.user %}
+                            <a href="{{ path('app_favorites') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Favoriten</a>
+                            <a href="{{ path('app_profile') }}" class="px-4 py-2 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">Profil</a>
+                            <div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+                            <div class="flex items-center gap-3 pl-2">
+                                <span class="text-sm font-medium text-slate-500">{{ app.user.userIdentifier }}</span>
+                                <a href="{{ path('app_logout') }}" class="px-4 py-2 text-sm font-bold text-red-600 hover:bg-red-50 rounded-lg transition-all">Abmelden</a>
+                            </div>
                         {% else %}
-                            <a href="{{ path('app_login') }}" class="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-blue-700 transition-all shadow-lg shadow-blue-100">Anmelden</a>
+                            <a href="{{ path('app_login') }}" class="ml-4 px-6 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-blue-600 transition-all shadow-lg shadow-slate-200 active:scale-95">Anmelden</a>
                         {% endif %}
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="flex md:hidden items-center">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-gray-500 hover:text-blue-600 focus:outline-none">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                                <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" style="display: none;" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen"
+                 class="md:hidden bg-white border-b border-slate-200 pb-6 px-4 space-y-1 shadow-xl"
+                 style="display: none;">
+                <a href="{{ path('app_schema') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Schema</a>
+                {% if app.user %}
+                    <a href="{{ path('app_favorites') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Favoriten</a>
+                    <a href="{{ path('app_profile') }}" class="block px-4 py-3 text-sm font-semibold text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all">Profil</a>
+                    <div class="px-4 py-4 mt-2 border-t border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Eingeloggt als</span>
+                        <span class="text-sm font-semibold text-slate-700">{{ app.user.userIdentifier }}</span>
+                    </div>
+                    <a href="{{ path('app_logout') }}" class="block px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 rounded-xl transition-all">Abmelden</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="block w-full text-center px-4 py-4 bg-slate-900 text-white rounded-2xl text-sm font-bold hover:bg-blue-600 transition-all shadow-lg">Anmelden</a>
+                {% endif %}
+            </div>
         </nav>
-        {% block body %}{% endblock %}
+        <main class="min-h-screen">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="bg-white border-t border-slate-200 pt-16 pb-8 no-print mt-20">
+            <div class="container mx-auto px-4 max-w-7xl">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+                    <div class="col-span-1 md:col-span-1">
+                        <a href="{{ path('app_home') }}" class="flex items-center gap-2 mb-6">
+                            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div>
+                            <span class="text-lg font-black text-slate-900 tracking-tight uppercase">Nig Tanker</span>
+                        </a>
+                        <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
+                            Finden Sie die günstigsten Tankstellen in Ihrer Nähe. Echtzeit-Preise und einfache Navigation.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6">Navigation</h4>
+                        <ul class="space-y-4">
+                            <li><a href="{{ path('app_home') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Startseite</a></li>
+                            <li><a href="{{ path('app_schema') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Schema</a></li>
+                            {% if app.user %}
+                                <li><a href="{{ path('app_favorites') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Favoriten</a></li>
+                                <li><a href="{{ path('app_profile') }}" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Profil</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-900 uppercase tracking-widest mb-6">Rechtliches</h4>
+                        <ul class="space-y-4">
+                            <li><a href="#" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Datenschutz</a></li>
+                            <li><a href="#" class="text-sm text-slate-500 hover:text-blue-600 transition-colors">Impressum</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-xs text-slate-400">
+                        &copy; {{ "now"|date("Y") }} Nig Tanker. Alle Rechte vorbehalten.
+                    </p>
+                    <div class="flex gap-6">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em]">Crafted with passion</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
         {{ include('_cookie_banner.html.twig') }}
     </body>
 </html>

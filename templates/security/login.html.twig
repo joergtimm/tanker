@@ -3,59 +3,70 @@
 {% block title %}Anmelden{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1 class="text-center text-3xl font-black text-gray-900 tracking-tight mb-8">Anmelden</h1>
+        <div class="flex justify-center mb-8">
+            <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+        </div>
+        <h1 class="text-center text-4xl font-black text-slate-900 tracking-tight mb-4">Willkommen zurück</h1>
+        <p class="text-center text-slate-500 font-medium mb-10">Melden Sie sich an, um Ihre Favoriten zu verwalten.</p>
     </div>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow-xl border border-gray-100 rounded-3xl sm:px-10">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-10 px-6 shadow-2xl shadow-slate-200/50 border border-slate-100 rounded-[2rem] sm:px-12">
             <form method="post">
                 {% if error %}
-                    <div class="mb-4 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-700 text-sm font-medium">
+                    <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-700 text-sm font-bold flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
                         {{ error.messageKey|trans(error.messageData, 'security') }}
                     </div>
                 {% endif %}
 
                 {% if app.user %}
-                    <div class="mb-4 p-4 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium">
-                        Sie sind angemeldet als {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}" class="font-bold underline">Abmelden</a>
+                    <div class="mb-6 p-4 rounded-2xl bg-blue-50 border border-blue-100 text-blue-700 text-sm font-bold flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                        Angemeldet als {{ app.user.userIdentifier }}
                     </div>
                 {% endif %}
 
-                <div class="space-y-6">
+                <div class="space-y-8">
                     <div>
-                        <label for="inputEmail" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Email</label>
-                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium" autocomplete="email" required autofocus>
+                        <label for="inputEmail" class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Email Adresse</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 transition-all outline-none text-slate-900 font-bold" autocomplete="email" required autofocus placeholder="name@beispiel.de">
                     </div>
 
                     <div>
-                        <label for="inputPassword" class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Passwort</label>
-                        <input type="password" name="password" id="inputPassword" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none text-gray-700 font-medium" autocomplete="current-password" required>
+                        <label for="inputPassword" class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3 ml-1">Passwort</label>
+                        <input type="password" name="password" id="inputPassword" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-blue-500/10 focus:bg-white focus:border-blue-500 transition-all outline-none text-slate-900 font-bold" autocomplete="current-password" required placeholder="••••••••">
                     </div>
 
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
-
+                    <div class="flex items-center justify-between">
                         <div class="flex items-center">
-                            <input type="checkbox" name="_remember_me" id="_remember_me" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                            <label for="_remember_me" class="ml-2 block text-sm text-gray-900">Angemeldet bleiben</label>
+                            <input type="checkbox" name="_remember_me" id="_remember_me" class="h-5 w-5 text-blue-600 focus:ring-blue-500 border-slate-300 rounded-lg transition-all" checked>
+                            <label for="_remember_me" class="ml-3 block text-sm font-bold text-slate-700">Angemeldet bleiben</label>
                         </div>
-
+                    </div>
 
                     <div>
-                        <button type="submit" class="w-full py-3.5 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 active:scale-95 flex items-center justify-center gap-2">
+                        <button type="submit" class="w-full py-4.5 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-[0.98]">
                             Anmelden
                         </button>
                     </div>
 
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-gray-600">
+                    <div class="pt-6 text-center border-t border-slate-100">
+                        <p class="text-sm text-slate-500 font-medium">
                             Noch kein Konto?
-                            <a href="{{ path('app_register') }}" class="font-bold text-blue-600 hover:text-blue-500">
+                            <a href="{{ path('app_register') }}" class="font-black text-blue-600 hover:text-blue-500 ml-1">
                                 Jetzt registrieren
                             </a>
                         </p>

@@ -3,25 +3,25 @@
 {% block title %}Meine Favoriten{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50 py-12">
-    <div class="container mx-auto px-4 max-w-6xl">
-        <header class="mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">Meine Favoriten</h1>
-            <p class="text-lg text-gray-600 font-medium">Ihre persönlich gespeicherten Tankstellen.</p>
+<div class="py-12 md:py-20 bg-slate-50">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <header class="mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">Meine <span class="text-blue-600">Favoriten.</span></h1>
+            <p class="text-lg md:text-xl text-slate-500 font-medium max-w-2xl leading-relaxed">Ihre persönlich gespeicherten Tankstellen auf einen Blick.</p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {% for station in stations %}
-                <div class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="p-6 flex-grow">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="flex flex-col gap-2">
-                                <span class="inline-block px-3 py-1 rounded-lg bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 overflow-hidden flex flex-col">
+                    <div class="p-8 flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-3">
+                                <span class="inline-flex px-4 py-1.5 rounded-full bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] border border-slate-100 shadow-sm">
                                     {{ station.brand|default('Tankstelle') }}
                                 </span>
                                 <button
                                     data-favorite-toggle="{{ path('app_favorite_toggle', {uuid: station.uuid}) }}"
-                                    class="favorite-btn inline-flex items-center justify-center p-2 rounded-xl transition-all text-yellow-400 bg-yellow-50"
+                                    class="favorite-btn inline-flex items-center justify-center w-12 h-12 rounded-2xl transition-all text-amber-400 bg-amber-50 shadow-inner"
                                     title="Von Favoriten entfernen"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,36 +29,43 @@
                                     </svg>
                                 </button>
                             </div>
-                            <div class="flex items-center gap-2">
-                                {% if station.isOpen %}
-                                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                                {% else %}
-                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                {% endif %}
+                            <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100 shadow-sm">
+                                <span class="text-[10px] font-black uppercase tracking-widest {{ station.isOpen ? 'text-emerald-600' : 'text-red-600' }}">
+                                    {{ station.isOpen ? 'Geöffnet' : 'Geschlossen' }}
+                                </span>
+                                <span class="w-2.5 h-2.5 rounded-full {{ station.isOpen ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' }} animate-pulse"></span>
                             </div>
                         </div>
 
-                        <h2 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        <h2 class="text-2xl font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                             <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}">
                                 {{ station.name }}
                             </a>
                         </h2>
 
-                        <p class="text-sm text-gray-500 mb-6 line-clamp-2">
-                            {{ station.street }} {{ station.houseNumber }}, {{ station.postCode }} {{ station.place }}
+                        <p class="text-sm text-slate-400 mb-8 font-medium line-clamp-2">
+                            {{ station.street }} {{ station.houseNumber }}<br>
+                            {{ station.postCode }} {{ station.place }}
                         </p>
                     </div>
 
-                    <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}" class="block w-full py-4 bg-gray-50 text-center text-sm font-bold text-gray-600 hover:bg-blue-600 hover:text-white transition-all border-t border-gray-100 uppercase tracking-widest">
+                    <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}" class="flex items-center justify-center gap-2 py-6 bg-slate-50 text-[11px] font-black text-slate-400 hover:bg-slate-900 hover:text-white transition-all border-t border-slate-100 uppercase tracking-[0.3em]">
                         Details ansehen
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
                     </a>
                 </div>
             {% else %}
-                <div class="col-span-full py-20 text-center">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 text-gray-400 mb-4 text-3xl">⭐</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Noch keine Favoriten</h3>
-                    <p class="text-gray-500">Markieren Sie Tankstellen als Favoriten, um sie hier schnell wiederzufinden.</p>
-                    <a href="{{ path('app_home') }}" class="inline-block mt-6 px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all">Zur Suche</a>
+                <div class="col-span-full py-24 text-center">
+                    <div class="inline-flex items-center justify-center w-28 h-28 rounded-[2rem] bg-slate-100 text-slate-300 mb-8 text-5xl shadow-inner">
+                        ⭐
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-3">Noch keine Favoriten</h3>
+                    <p class="text-slate-500 font-medium max-w-sm mx-auto mb-10">Markieren Sie Tankstellen als Favoriten, um sie hier schnell wiederzufinden.</p>
+                    <a href="{{ path('app_home') }}" class="inline-block px-10 py-4.5 bg-slate-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-200">
+                        Jetzt suchen
+                    </a>
                 </div>
             {% endfor %}
         </div>

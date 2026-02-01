@@ -112,27 +112,30 @@ final class HomeController extends AbstractController
         // Holt die IDs der Tankstellen im Umkreis über den Service
         $stationIds = $this->tankerkoenigService->fetchStations($lat, $lng, $radius);
 
-        // Erstellt einen QueryBuilder für die Station-Entität
-        $queryBuilder = $this->entityManager->getRepository(Station::class)->createQueryBuilder('s');
-        // Konfiguriert die Datenbankabfrage
-        $queryBuilder
-            // Filtert nach den gefundenen Station-IDs
-            ->where('s.uuid IN (:ids)')
-            // Bindet das ID-Array an den Parameter
-            ->setParameter('ids', $stationIds)
-            // Stellt sicher, dass ein Preis für den gewählten Kraftstoff vorliegt
-            ->andWhere('s.' . $selectedFuel . ' IS NOT NULL')
-            // Sortiert nach Preis aufsteigend
-            ->orderBy('s.' . $selectedFuel, 'ASC')
-            // Sortiert zusätzlich nach Distanz aufsteigend
-            ->addOrderBy('s.distance', 'ASC');
+        $stations = [];
+        if (!empty($stationIds)) {
+            // Erstellt einen QueryBuilder für die Station-Entität
+            $queryBuilder = $this->entityManager->getRepository(Station::class)->createQueryBuilder('s');
+            // Konfiguriert die Datenbankabfrage
+            $queryBuilder
+                // Filtert nach den gefundenen Station-IDs
+                ->where('s.uuid IN (:ids)')
+                // Bindet das ID-Array an den Parameter
+                ->setParameter('ids', $stationIds)
+                // Stellt sicher, dass ein Preis für den gewählten Kraftstoff vorliegt
+                ->andWhere('s.' . $selectedFuel . ' IS NOT NULL')
+                // Sortiert nach Preis aufsteigend
+                ->orderBy('s.' . $selectedFuel, 'ASC')
+                // Sortiert zusätzlich nach Distanz aufsteigend
+                ->addOrderBy('s.distance', 'ASC');
 
-        // Führt die Abfrage aus und speichert das Ergebnis
-        $stations = $queryBuilder
-            // Erzeugt die Query
-            ->getQuery()
-            // Holt die Resultate als Array von Objekten
-            ->getResult();
+            // Führt die Abfrage aus und speichert das Ergebnis
+            $stations = $queryBuilder
+                // Erzeugt die Query
+                ->getQuery()
+                // Holt die Resultate als Array von Objekten
+                ->getResult();
+        }
 
         // Rendert das Twig-Template und übergibt die benötigten Daten
         return $this->render('home/index.html.twig', [

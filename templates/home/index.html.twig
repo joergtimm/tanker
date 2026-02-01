@@ -3,68 +3,72 @@
 {% block title %}Tankstellen in der Nähe{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50 py-12">
-    <div class="container mx-auto px-4 max-w-6xl">
-        <header class="mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-900 tracking-tight mb-4">Tankstellen in der Nähe</h1>
-            <p class="text-lg text-gray-600 font-medium">Finden Sie die besten Preise im Umkreis von <span class="text-blue-600 font-bold">{{ current_radius }} km</span></p>
+<div class="py-12 md:py-20 bg-slate-50">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <header class="mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">Tankstellen <span class="text-blue-600">entdecken.</span></h1>
+            <p class="text-lg md:text-xl text-slate-500 font-medium max-w-2xl leading-relaxed">
+                Echtzeit-Preise im Umkreis von <span class="text-slate-900 font-bold underline decoration-blue-500 decoration-4 underline-offset-4">{{ current_radius }} km</span> finden und clever sparen.
+            </p>
         </header>
 
-        <div class="mb-12">
+        <div class="mb-16">
             {% if api_error %}
-                <div class="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-4 text-red-700">
-                    <div class="flex-shrink-0 w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center text-xl">
+                <div class="mb-8 p-6 bg-red-50 border border-red-100 rounded-3xl flex items-start gap-5 text-red-800 shadow-sm">
+                    <div class="flex-shrink-0 w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
                         ⚠️
                     </div>
                     <div>
-                        <div class="font-bold">Dienst vorübergehend nicht verfügbar</div>
-                        <div class="text-sm opacity-80">Wir können aktuell keine Live-Preise von Tankerkönig abrufen. Es werden ggf. veraltete Daten angezeigt.</div>
+                        <div class="font-bold text-lg mb-1">Dienst vorübergehend eingeschränkt</div>
+                        <div class="text-slate-600">Wir können aktuell keine Live-Preise abrufen. Es werden ggf. veraltete Daten angezeigt.</div>
                     </div>
                 </div>
             {% endif %}
 
-            <form method="get" action="{{ path('app_home') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <form method="get" action="{{ path('app_home') }}" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 {# Standort Auswahl #}
-                <div class="lg:col-span-5 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full">
-                    <label class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                        Standort
+                <div class="lg:col-span-5 bg-white p-6 md:p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100">
+                    <label class="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">
+                        <div class="p-1.5 bg-blue-50 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                        </div>
+                        Aktueller Standort
                     </label>
 
-                    <div class="mb-6 p-4 bg-blue-50/50 rounded-2xl border border-blue-100">
+                    <div class="mb-8 p-5 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-colors">
                         {% if current_address %}
-                            <div class="font-bold text-gray-900">{{ current_address.name }}</div>
-                            <div class="text-sm text-gray-500">{{ current_address.street }}, {{ current_address.city }}</div>
+                            <div class="font-bold text-slate-900 text-lg mb-1">{{ current_address.name }}</div>
+                            <div class="text-sm text-slate-500 font-medium">{{ current_address.street }}, {{ current_address.city }}</div>
                         {% else %}
-                            <div class="font-bold text-gray-900">{{ default_address.name }}</div>
-                            <div class="text-sm text-gray-500">{{ default_address.street }}, {{ default_address.city }}</div>
+                            <div class="font-bold text-slate-900 text-lg mb-1">{{ default_address.name }}</div>
+                            <div class="text-sm text-slate-500 font-medium">{{ default_address.street }}, {{ default_address.city }}</div>
                         {% endif %}
                     </div>
 
                     {% if app.user %}
                         <div class="relative group">
-                            <select id="address_select" class="w-full pl-4 pr-10 py-4 bg-gray-50 border-0 rounded-2xl text-gray-900 font-semibold focus:ring-2 focus:ring-blue-500 appearance-none cursor-pointer transition-all"
+                            <select id="address_select" class="w-full pl-5 pr-12 py-4.5 bg-slate-900 text-white border-0 rounded-2xl font-bold focus:ring-4 focus:ring-blue-500/20 appearance-none cursor-pointer transition-all shadow-lg hover:bg-slate-800"
                                     onchange="const option = this.options[this.selectedIndex]; document.getElementById('lat').value = option.dataset.lat; document.getElementById('lng').value = option.dataset.lng; this.form.submit();">
                                 <option value="default"
                                         data-lat="{{ default_address_coords.lat }}"
                                         data-lng="{{ default_address_coords.lng }}"
                                         {% if not current_address %}selected{% endif %}>
-                                    {{ default_address.name }} ({{ default_address.city }})
+                                    Standardadresse: {{ default_address.city }}
                                 </option>
                                 {% for address in user_addresses %}
                                     <option value="{{ address.id }}"
                                             data-lat="{{ address.lat }}"
                                             data-lng="{{ address.lng }}"
                                             {% if current_address and current_address.id == address.id %}selected{% endif %}>
-                                        {{ address.name }} ({{ address.street }}, {{ address.city }})
+                                        {{ address.name }} ({{ address.city }})
                                     </option>
                                 {% endfor %}
                             </select>
-                            <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-blue-500 transition-colors">
+                            <div class="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-blue-400 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </div>
                         </div>
@@ -73,34 +77,34 @@
                     {% else %}
                         <input type="hidden" id="lat" name="lat" value="{{ current_lat }}">
                         <input type="hidden" id="lng" name="lng" value="{{ current_lng }}">
-                        <div class="flex flex-col gap-4">
-                            <a href="{{ path('app_login') }}" class="group flex items-center justify-between p-4 bg-white hover:bg-gray-50 border border-gray-100 rounded-2xl transition-all shadow-sm">
-                                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Eigene Adressen nutzen</span>
-                                <div class="p-2 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                                    </svg>
-                                </div>
-                            </a>
-                        </div>
+                        <a href="{{ path('app_login') }}" class="group flex items-center justify-between p-5 bg-blue-50 hover:bg-blue-600 rounded-2xl transition-all shadow-sm border border-blue-100 hover:border-blue-600">
+                            <span class="text-xs font-black text-blue-700 uppercase tracking-widest group-hover:text-white transition-colors">Eigene Adressen nutzen</span>
+                            <div class="p-2.5 bg-white text-blue-600 rounded-xl group-hover:bg-blue-500 group-hover:text-white transition-all shadow-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                                </svg>
+                            </div>
+                        </a>
                     {% endif %}
                 </div>
 
                 {# Filter & Radius #}
-                <div class="lg:col-span-7 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="lg:col-span-7 bg-white p-6 md:p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                         <div>
-                            <label class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                                </svg>
-                                Kraftstoff
+                            <label class="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6">
+                                <div class="p-1.5 bg-blue-50 rounded-lg">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                    </svg>
+                                </div>
+                                Kraftstoffart
                             </label>
-                            <div class="inline-flex p-1 bg-gray-50 rounded-2xl w-full">
+                            <div class="inline-flex p-1.5 bg-slate-50 rounded-2xl w-full">
                                 {% for fuel in ['diesel', 'e5', 'e10'] %}
                                     <label class="flex-1 cursor-pointer">
                                         <input type="radio" name="fuel" value="{{ fuel }}" {% if fuel == selected_fuel %}checked{% endif %} class="sr-only peer" onchange="this.form.submit()">
-                                        <div class="py-3 text-center rounded-xl transition-all font-bold text-gray-500 uppercase text-xs tracking-widest peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-sm">
+                                        <div class="py-3.5 text-center rounded-xl transition-all font-bold text-slate-500 uppercase text-[11px] tracking-[0.15em] peer-checked:bg-white peer-checked:text-blue-600 peer-checked:shadow-lg peer-checked:shadow-slate-200/50">
                                             {{ fuel }}
                                         </div>
                                     </label>
@@ -109,59 +113,63 @@
                         </div>
 
                         <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <label for="rad" class="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.492V4.508a2 2 0 011.553-1.944L9 1l6 3 5.447-2.724A2 2 0 0121 3.224v10.984a2 2 0 01-1.553 1.944L15 19l-6 1z" />
-                                    </svg>
-                                    Umkreis
+                            <div class="flex justify-between items-center mb-6">
+                                <label for="rad" class="flex items-center gap-3 text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                                    <div class="p-1.5 bg-blue-50 rounded-lg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 20l-5.447-2.724A2 2 0 013 15.492V4.508a2 2 0 011.553-1.944L9 1l6 3 5.447-2.724A2 2 0 0121 3.224v10.984a2 2 0 01-1.553 1.944L15 19l-6 1z" />
+                                        </svg>
+                                    </div>
+                                    Suchradius
                                 </label>
-                                <span class="text-sm font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
+                                <span class="text-sm font-black text-blue-600 bg-blue-50 px-4 py-1.5 rounded-xl border border-blue-100 shadow-sm">
                                     {{ current_radius }} km
                                 </span>
                             </div>
-                            <div class="flex flex-col gap-4">
-                                <div class="relative flex items-center h-10">
+                            <div class="flex flex-col gap-6">
+                                <div class="relative flex items-center h-10 group">
                                     <input type="range" id="rad" name="rad" min="1.5" max="{{ app.user ? 25 : 5 }}" step="0.5" value="{{ current_radius }}"
-                                           class="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                                           class="w-full h-2.5 bg-slate-100 rounded-full appearance-none cursor-pointer accent-blue-600"
                                            oninput="this.closest('div').previousElementSibling.querySelector('span').textContent = this.value + ' km'"
                                            onchange="this.form.submit()">
                                 </div>
                                 {% if not app.user %}
-                                    <a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2 py-2 px-4 bg-yellow-50 hover:bg-yellow-100 text-yellow-700 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <a href="{{ path('app_login') }}" class="flex items-center justify-center gap-2.5 py-3 px-4 bg-amber-50 hover:bg-amber-100 text-amber-700 text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all border border-amber-100 shadow-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                                         </svg>
-                                        Login für bis zu 25km
+                                        Login für 25km Radius
                                     </a>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="mt-8 w-full py-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-gray-200 active:scale-[0.98] flex items-center justify-center gap-3 group">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                        </svg>
+                    <button type="submit" class="mt-10 w-full py-5 bg-slate-900 text-white rounded-[1.25rem] font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-[0.98] flex items-center justify-center gap-4 group">
+                        <div class="w-6 h-6 bg-slate-800 rounded-lg flex items-center justify-center group-hover:bg-blue-500 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                        </div>
                         Ergebnisse aktualisieren
                     </button>
                 </div>
             </form>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {% for station in stations %}
-                <div class="group bg-white rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden flex flex-col">
-                    <div class="p-6 flex-grow">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="flex flex-col gap-2">
-                                <span class="inline-block px-3 py-1 rounded-lg bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-100">
+                <div class="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 overflow-hidden flex flex-col">
+                    <div class="p-8 flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-3">
+                                <span class="inline-flex px-4 py-1.5 rounded-full bg-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] border border-slate-100 shadow-sm">
                                     {{ station.brand|default('Tankstelle') }}
                                 </span>
                                 {% if app.user %}
                                     <button
                                         data-favorite-toggle="{{ path('app_favorite_toggle', {uuid: station.uuid}) }}"
-                                        class="favorite-btn inline-flex items-center justify-center p-2 rounded-xl transition-all {{ app.user.favorites.contains(station) ? 'text-yellow-400 bg-yellow-50' : 'text-gray-300 bg-gray-50 hover:text-yellow-400' }}"
+                                        class="favorite-btn inline-flex items-center justify-center w-12 h-12 rounded-2xl transition-all {{ app.user.favorites.contains(station) ? 'text-amber-400 bg-amber-50 shadow-inner' : 'text-slate-300 bg-slate-50 hover:text-amber-400 hover:bg-amber-50' }}"
                                         title="{{ app.user.favorites.contains(station) ? 'Von Favoriten entfernen' : 'Zu Favoriten hinzufügen' }}"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="{{ app.user.favorites.contains(station) ? 'currentColor' : 'none' }}" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,62 +178,61 @@
                                     </button>
                                 {% endif %}
                             </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-gray-400 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <div class="flex flex-col items-end gap-3">
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100 shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                     </svg>
-                                    {{ station.distance }} km
-                                </span>
-                                {% if station.isOpen %}
-                                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
-                                {% else %}
-                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                {% endif %}
+                                    <span class="text-xs font-black text-slate-700">{{ station.distance }} km</span>
+                                </div>
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100 shadow-sm">
+                                    <span class="text-[10px] font-black uppercase tracking-widest {{ station.isOpen ? 'text-emerald-600' : 'text-red-600' }}">
+                                        {{ station.isOpen ? 'Geöffnet' : 'Geschlossen' }}
+                                    </span>
+                                    <span class="w-2.5 h-2.5 rounded-full {{ station.isOpen ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' }} animate-pulse"></span>
+                                </div>
                             </div>
                         </div>
 
-                        <h2 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                        <h2 class="text-2xl font-black text-slate-900 mb-2 group-hover:text-blue-600 transition-colors leading-tight">
                             <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}">
                                 {{ station.name }}
                             </a>
                         </h2>
 
-                        <p class="text-sm text-gray-500 mb-6 line-clamp-2 truncate">
-                            {{ station.street }} {{ station.houseNumber }}, {{ station.postCode }} {{ station.place }}
+                        <p class="text-sm text-slate-400 mb-8 font-medium">
+                            {{ station.street }} {{ station.houseNumber }}<br>
+                            {{ station.postCode }} {{ station.place }}
                         </p>
 
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'diesel' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
-                                <span class="text-xs font-bold {% if selected_fuel == 'diesel' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Diesel</span>
-                                <span class="text-lg font-black {% if selected_fuel == 'diesel' %}text-blue-700{% else %}text-gray-900{% endif %}">
-                                    {{ station.diesel ? station.diesel|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'diesel' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'e5' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
-                                <span class="text-xs font-bold {% if selected_fuel == 'e5' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Super E5</span>
-                                <span class="text-lg font-black {% if selected_fuel == 'e5' %}text-blue-700{% else %}text-gray-900{% endif %}">
-                                    {{ station.e5 ? station.e5|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'e5' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
-                                </span>
-                            </div>
-                            <div class="flex justify-between items-center p-3 rounded-2xl {% if selected_fuel == 'e10' %}bg-blue-50/30 border-blue-100{% else %}bg-gray-50 border-transparent{% endif %} border group-hover:border-blue-100 transition-all">
-                                <span class="text-xs font-bold {% if selected_fuel == 'e10' %}text-blue-400{% else %}text-gray-400{% endif %} uppercase">Super E10</span>
-                                <span class="text-lg font-black {% if selected_fuel == 'e10' %}text-blue-700{% else %}text-gray-900{% endif %}">
-                                    {{ station.e10 ? station.e10|number_format(3, ',', '.') : '--' }}<span class="text-xs ml-0.5 {% if selected_fuel == 'e10' %}text-blue-400{% else %}text-gray-400{% endif %}">€</span>
-                                </span>
-                            </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            {% for fuel_type in ['diesel', 'e5', 'e10'] %}
+                                {% set price = attribute(station, fuel_type) %}
+                                <div class="flex justify-between items-center p-4 rounded-[1.25rem] {% if selected_fuel == fuel_type %}bg-blue-600 text-white shadow-lg shadow-blue-200 border-transparent{% else %}bg-slate-50 text-slate-900 border-slate-100 hover:bg-slate-100 transition-colors{% endif %} border">
+                                    <span class="text-[11px] font-black uppercase tracking-widest opacity-80">{{ fuel_type == 'diesel' ? 'Diesel' : (fuel_type == 'e5' ? 'Super E5' : 'Super E10') }}</span>
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-2xl font-black tracking-tight">{{ price ? price|number_format(3, ',', '.') : '--' }}</span>
+                                        <span class="text-xs font-bold opacity-60">€</span>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
 
-                    <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}" class="block w-full py-4 bg-gray-50 text-center text-sm font-bold text-gray-600 hover:bg-blue-600 hover:text-white transition-all border-t border-gray-100 uppercase tracking-widest">
+                    <a href="{{ path('app_station_detail', {'uuid': station.uuid}) }}" class="flex items-center justify-center gap-2 py-6 bg-slate-50 text-[11px] font-black text-slate-400 hover:bg-slate-900 hover:text-white transition-all border-t border-slate-100 uppercase tracking-[0.3em]">
                         Details ansehen
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
                     </a>
                 </div>
             {% else %}
-                <div class="col-span-full py-20 text-center">
-                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-100 text-gray-400 mb-4 text-3xl">⛽</div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Keine Tankstellen gefunden</h3>
-                    <p class="text-gray-500">Versuchen Sie es mit einem größeren Umkreis oder anderen Koordinaten.</p>
+                <div class="col-span-full py-24 text-center">
+                    <div class="inline-flex items-center justify-center w-28 h-28 rounded-[2rem] bg-slate-100 text-slate-300 mb-8 text-5xl shadow-inner">
+                        ⛽
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-3">Keine Tankstellen gefunden</h3>
+                    <p class="text-slate-500 font-medium max-w-sm mx-auto">In diesem Radius konnten wir leider keine Stationen finden. Erhöhen Sie den Suchradius.</p>
                 </div>
             {% endfor %}
         </div>

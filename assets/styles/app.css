@@ -1,2 +1,8 @@
 @import "tailwindcss";
 
+/*# sourceMappingURL=dropzone.css.map */
+
+.a4-body {
+    aspect-ratio: 1 / 1.4142; /* DIN A4 Seitenverhältnis */
+    max-width: 1000px;
+}

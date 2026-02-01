@@ -3,66 +3,93 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-<div class="min-h-screen bg-gray-50 py-12">
-    <div class="container mx-auto px-4 max-w-6xl">
-        <header class="mb-12">
-            <h1 class="text-4xl font-black text-gray-900 tracking-tight mb-4">Mein Profil</h1>
-            <p class="text-lg text-gray-600 font-medium">Verwalten Sie Ihre persönlichen Daten und Adressen.</p>
+<div class="py-12 md:py-20 bg-slate-50">
+    <div class="container mx-auto px-4 max-w-7xl">
+        <header class="mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">Mein <span class="text-blue-600">Profil.</span></h1>
+            <p class="text-lg md:text-xl text-slate-500 font-medium max-w-2xl leading-relaxed">Verwalten Sie Ihre persönlichen Daten und bevorzugten Standorte.</p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="md:col-span-1">
-                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden h-full">
-                    <div class="p-8">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-6">Benutzerdaten</h2>
-                        <div class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-4">
+                <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                    <div class="p-8 md:p-10">
+                        <div class="flex items-center gap-4 mb-10">
+                            <div class="w-12 h-12 rounded-[1rem] bg-blue-50 text-blue-600 flex items-center justify-center shadow-inner">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Benutzerdaten</h2>
+                        </div>
+
+                        <div class="space-y-8">
                             <div>
-                                <span class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">E-Mail</span>
-                                <p class="text-gray-900 font-medium break-all">{{ user.email }}</p>
+                                <span class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1">E-Mail Adresse</span>
+                                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 font-bold text-slate-900 break-all">
+                                    {{ user.email }}
+                                </div>
                             </div>
                             <div>
-                                <span class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Status</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ user.isVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ user.isVerified ? 'Verifiziert' : 'Nicht verifiziert' }}
-                                </span>
+                                <span class="block text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1">Konto Status</span>
+                                <div class="flex items-center gap-3">
+                                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest {{ user.isVerified ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100' }}">
+                                        {{ user.isVerified ? 'Verifiziert' : 'Nicht verifiziert' }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="md:col-span-2">
-                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden h-full">
-                    <div class="p-8">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-2xl font-bold text-gray-900">Meine Adressen</h2>
-                            <a href="{{ path('app_address_new') }}" class="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200 text-sm">
-                                + Neue Adresse
+            <div class="lg:col-span-8">
+                <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                    <div class="p-8 md:p-10">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-10">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-[1rem] bg-indigo-50 text-indigo-600 flex items-center justify-center shadow-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    </svg>
+                                </div>
+                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Gespeicherte Adressen</h2>
+                            </div>
+                            <a href="{{ path('app_address_new') }}" class="w-full sm:w-auto px-6 py-3.5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 text-sm flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Neue Adresse
                             </a>
                         </div>
 
                         {% if user.addresses is empty %}
-                            <div class="text-center py-12 border-2 border-dashed border-gray-100 rounded-3xl">
-                                <p class="text-gray-500 mb-4">Sie haben noch keine Adressen gespeichert.</p>
-                                <p class="text-sm text-gray-400">Fügen Sie eine Adresse hinzu, um Tankstellen in Ihrer Nähe schneller zu finden.</p>
+                            <div class="text-center py-20 border-2 border-dashed border-slate-100 rounded-[2rem] bg-slate-50/50">
+                                <div class="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl mx-auto mb-6">📍</div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-2">Noch keine Adressen</h3>
+                                <p class="text-slate-500 font-medium max-w-xs mx-auto">Fügen Sie eine Adresse hinzu, um Tankstellen in Ihrer Nähe schneller zu finden.</p>
                             </div>
                         {% else %}
-                            <div class="grid grid-cols-1 gap-4">
+                            <div class="grid grid-cols-1 gap-6">
                                 {% for address in user.addresses %}
-                                    <div class="flex items-center justify-between p-6 bg-gray-50 rounded-2xl border border-transparent hover:border-blue-100 transition-all group">
-                                        <div>
-                                            <h3 class="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ address.name }}</h3>
-                                            <p class="text-sm text-gray-500">{{ address.street }}, {{ address.postCode }} {{ address.city }}</p>
-                                            <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-widest">{{ address.lat }}, {{ address.lng }}</p>
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-8 bg-slate-50 rounded-[1.5rem] border border-transparent hover:border-blue-100 hover:bg-white hover:shadow-xl hover:shadow-slate-200/40 transition-all group gap-6">
+                                        <div class="flex-grow">
+                                            <div class="flex items-center gap-2 mb-2">
+                                                <h3 class="font-black text-xl text-slate-900 group-hover:text-blue-600 transition-colors">{{ address.name }}</h3>
+                                            </div>
+                                            <p class="text-slate-500 font-bold text-sm mb-2">{{ address.street }}, {{ address.postCode }} {{ address.city }}</p>
+                                            <div class="inline-flex px-3 py-1 rounded-lg bg-slate-200/50 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+                                                {{ address.lat }}, {{ address.lng }}
+                                            </div>
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <a href="{{ path('app_address_edit', {id: address.id}) }}" class="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                                            <a href="{{ path('app_address_edit', {id: address.id}) }}" class="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-slate-400 hover:text-blue-600 hover:shadow-md transition-all border border-slate-100">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                             </a>
                                             <form method="post" action="{{ path('app_address_delete', {id: address.id}) }}" onsubmit="return confirm('Möchten Sie diese Adresse wirklich löschen?');">
-                                                <button class="p-2 text-gray-400 hover:text-red-600 transition-colors">
+                                                <button class="w-12 h-12 flex items-center justify-center bg-white rounded-xl text-slate-400 hover:text-red-600 hover:shadow-md transition-all border border-slate-100">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                     </svg>

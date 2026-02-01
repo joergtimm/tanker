@@ -31,6 +31,12 @@ security:
                 # where to redirect after logout
                 # target: app_any_route
 
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000 # 30 Tage in Sekunden
+                path: /
+                # always_remember_me: true
+
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }

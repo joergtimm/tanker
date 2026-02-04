@@ -12,18 +12,18 @@ class HomeControllerTest extends WebTestCase
         $crawler = $client->request('GET', '/');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Tankstellen in der Nähe');
+        $this->assertSelectorTextContains('h1', 'Tankstellen entdecken.');
 
         // Check that lat/lng inputs ARE present as hidden for guests
         $this->assertSelectorExists('input#lat[type="hidden"]');
         $this->assertSelectorExists('input#lng[type="hidden"]');
 
         // Check for the fixed address text
-        $this->assertSelectorTextContains('div.flex-grow div.font-bold', 'Niedersächsisches Internatsgymnasium');
-        $this->assertSelectorTextContains('div.flex-grow div.text-sm', 'Seminarstraße 8, Geestland');
+        $this->assertSelectorTextContains('div.mb-8.p-5 div.font-bold', 'Niedersächsisches Internatsgymnasium');
+        $this->assertSelectorTextContains('div.mb-8.p-5 div.text-sm', 'Seminarstraße 8, Geestland');
 
         // Check for login button
-        $this->assertSelectorTextContains('a.bg-yellow-50', 'Login für bis zu 25km');
+        $this->assertSelectorTextContains('a.bg-blue-50', 'Eigene Adressen nutzen');
     }
 
     public function testIndexAsUser(): void
@@ -60,12 +60,12 @@ class HomeControllerTest extends WebTestCase
         // Address should be visible in select
         $this->assertSelectorExists('select#address_select');
         // Now by default NIG should be selected if no address is provided in query
-        $this->assertSelectorTextContains('select#address_select option[selected]', 'Niedersächsisches Internatsgymnasium');
+        $this->assertSelectorTextContains('select#address_select option[selected]', 'Standardadresse: Geestland');
 
         // Now select the address via query params
         $client->request('GET', '/?lat=53.123&lng=8.123');
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('select#address_select option[selected]', 'Test Home');
+        $this->assertSelectorTextContains('select#address_select option[selected]', 'Test Home (Test City)');
     }
 
     public function testIndexAsGuestIgnoresQueryParams(): void
@@ -80,7 +80,7 @@ class HomeControllerTest extends WebTestCase
         $this->assertSelectorExists('input#lat[value="'.$this->getContainer()->getParameter('nig_lat').'"]');
         $this->assertSelectorExists('input#lng[value="'.$this->getContainer()->getParameter('nig_lng').'"]');
         // Wir suchen spezifisch nach dem div, das NICHT Teil der Fehlermeldung ist
-        $this->assertSelectorTextContains('div.flex-grow div.font-bold', 'Niedersächsisches Internatsgymnasium');
+        $this->assertSelectorTextContains('div.mb-8.p-5 div.font-bold', 'Niedersächsisches Internatsgymnasium');
     }
 
     public function testIndexAsUserWithoutAddressesUsesEnvCoordinates(): void
@@ -125,6 +125,6 @@ class HomeControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorExists('div.bg-red-50');
-        $this->assertSelectorTextContains('div.font-bold', 'Dienst vorübergehend nicht verfügbar');
+        $this->assertSelectorTextContains('div.bg-red-50 div.font-bold', 'Dienst vorübergehend eingeschränkt');
     }
 }

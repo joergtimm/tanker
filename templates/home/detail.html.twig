@@ -82,14 +82,15 @@
 
                             <div class="grid grid-cols-1 gap-5">
                                 {% set fuels = [
-                                    {'name': 'Super E5', 'value': station.e5, 'bg': 'bg-slate-50', 'text': 'text-slate-900'},
-                                    {'name': 'Super E10', 'value': station.e10, 'bg': 'bg-slate-50', 'text': 'text-slate-900'},
-                                    {'name': 'Diesel', 'value': station.diesel, 'bg': 'bg-blue-600', 'text': 'text-white'}
+                                    {'key': 'e5', 'name': 'Super E5', 'value': station.e5},
+                                    {'key': 'e10', 'name': 'Super E10', 'value': station.e10},
+                                    {'key': 'diesel', 'name': 'Diesel', 'value': station.diesel}
                                 ] %}
 
                                 {% for fuel in fuels %}
-                                    <div class="flex items-center justify-between p-6 rounded-[1.5rem] {{ fuel.bg == 'bg-blue-600' ? 'bg-blue-600 text-white shadow-xl shadow-blue-200 border-transparent' : 'bg-slate-50 text-slate-900 border-slate-100 hover:bg-slate-100 transition-all' }} border group">
-                                        <span class="text-[11px] font-black uppercase tracking-[0.2em] {{ fuel.bg == 'bg-blue-600' ? 'opacity-80' : 'text-slate-400' }}">{{ fuel.name }}</span>
+                                    {% set isSelected = fuel.key == selected_fuel %}
+                                    <div class="flex items-center justify-between p-6 rounded-[1.5rem] {{ isSelected ? 'bg-blue-600 text-white shadow-xl shadow-blue-200 border-transparent' : 'bg-slate-50 text-slate-900 border-slate-100 hover:bg-slate-100 transition-all' }} border group">
+                                        <span class="text-[11px] font-black uppercase tracking-[0.2em] {{ isSelected ? 'opacity-80' : 'text-slate-400' }}">{{ fuel.name }}</span>
                                         <div class="flex items-baseline gap-1">
                                             {% if fuel.value %}
                                                 {% set parts = fuel.value|split('.') %}

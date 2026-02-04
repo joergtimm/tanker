@@ -16,6 +16,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 // Importiert die Response-Klasse für HTTP-Antworten
 use Symfony\Component\HttpFoundation\Response;
+// Importiert die Cookie-Klasse für das Speichern von Nutzereinstellungen
+use Symfony\Component\HttpFoundation\Cookie;
 // Importiert das Route-Attribut für das Routing
 use Symfony\Component\Routing\Attribute\Route;
 // Importiert das ParameterBagInterface für den Zugriff auf Konfigurationsparameter
@@ -102,7 +104,10 @@ final class HomeController extends AbstractController
         } // Ende If-Empty-Check
 
         // Holt den gewählten Kraftstofftyp (Standard: diesel)
-        $selectedFuel = $request->query->get('fuel', 'diesel');
+        $selectedFuel = $request->query->get('fuel');
+        if ($selectedFuel === null) {
+            $selectedFuel = $request->cookies->get('selected_fuel', 'diesel');
+        }
         // Prüft, ob der gewählte Kraftstoff gültig ist
         if (!in_array($selectedFuel, ['diesel', 'e5', 'e10'])) {
             // Fallback auf Diesel bei ungültiger Eingabe
@@ -138,7 +143,7 @@ final class HomeController extends AbstractController
         }
 
         // Rendert das Twig-Template und übergibt die benötigten Daten
-        return $this->render('home/index.html.twig', [
+        $response = $this->render('home/index.html.twig', [
             // Liste der gefundenen Tankstellen
             'stations' => $stations,
             // Status, ob die API-Anfrage fehlgeschlagen ist
@@ -174,13 +179,30 @@ final class HomeController extends AbstractController
                 'lng' => $this->parameterBag->get('nig_lng'),
             ], // Ende default_address_coords Array
         ]); // Ende des render-Aufrufs
+
+        if ($request->query->has('fuel')) {
+            $response->headers->setCookie(
+                Cookie::create('selected_fuel', $selectedFuel)
+                    ->withExpires(new \DateTimeImmutable('+1 year'))
+            );
+        }
+
+        return $response;
     } // Ende der index-Methode
 
     // Definiert die Route für die Detailansicht einer Tankstelle
     #[Route('/station/{uuid}', name: 'app_station_detail')]
     // Die detail-Methode zeigt Einzelheiten zu einer Tankstelle an
-    public function detail(string $uuid): Response
+    public function detail(Request $request, string $uuid): Response
     {
+        // Holt den gewählten Kraftstofftyp (Standard: diesel)
+        $selectedFuel = $request->cookies->get('selected_fuel', 'diesel');
+        // Prüft, ob der gewählte Kraftstoff gültig ist
+        if (!in_array($selectedFuel, ['diesel', 'e5', 'e10'], true)) {
+            // Fallback auf Diesel bei ungültiger Eingabe
+            $selectedFuel = 'diesel';
+        } // Ende If-Kraftstoffvalidierung
+
         // Holt die Details der Station über den Service
         $station = $this->tankerkoenigService->fetchStationDetail($uuid);
 
@@ -194,6 +216,8 @@ final class HomeController extends AbstractController
         return $this->render('home/detail.html.twig', [
             // Übergibt das Station-Objekt an das Template
             'station' => $station,
+            // Aktuell gewählter Kraftstoff
+            'selected_fuel' => $selectedFuel,
         ]); // Ende des render-Aufrufs
     } // Ende der detail-Methode
 } // Ende der HomeController-Klasse

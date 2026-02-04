@@ -97,7 +97,7 @@ class World extends Animation {
         this.scene = new THREE.Scene();
 
         this.renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
-        this.renderer.setPixelRatio( window.devicePixelRatio );
+        this.renderer.setPixelRatio( Math.min( window.devicePixelRatio || 1, 2 ) );
         this.container.appendChild( this.renderer.domElement );
 
         this.camera = new THREE.PerspectiveCamera( 2, 1, 0.1, 10000 );
@@ -125,6 +125,11 @@ class World extends Animation {
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
 
+        if ( ! this.width || ! this.height ) {
+            this.width = window.innerWidth;
+            this.height = window.innerHeight;
+        }
+
         this.renderer.setSize( this.width, this.height );
 
         this.camera.fov = this.fov;
@@ -147,7 +152,13 @@ class World extends Animation {
             ? ( this.height / 100 ) * aspect
             : this.width / 100;
 
-        document.documentElement.style.fontSize = docFontSize + 'px';
+        const safeFontSize = Math.max( 8, docFontSize );
+
+        if ( this.game && this.game.dom && this.game.dom.ui ) {
+            this.game.dom.ui.style.fontSize = safeFontSize + 'px';
+        } else {
+            document.documentElement.style.fontSize = safeFontSize + 'px';
+        }
 
         if ( this.onResize ) this.onResize.forEach( cb => cb() );
 

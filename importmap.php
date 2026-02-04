@@ -392,4 +392,10 @@ return [
     'lodash-es/reduce.js' => [
         'version' => '4.17.21',
     ],
+    'three.js' => [
+        'version' => '0.77.1',
+    ],
+    'three' => [
+        'version' => '0.77.0',
+    ],
 ];

@@ -32,7 +32,7 @@ export default class extends Controller {
         // Called anytime its element is disconnected from the DOM
         // (on page change, when it's removed from or moved in the DOM, etc.)
 
-        // Here you should remove all event listeners added in "connect()" 
+        // Here you should remove all event listeners added in "connect()"
         // this.fooTarget.removeEventListener('click', this._fooBar)
     }
 }

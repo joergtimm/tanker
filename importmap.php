@@ -398,4 +398,7 @@ return [
     'three' => [
         'version' => '0.77.0',
     ],
+    'alpinejs' => [
+        'version' => '3.15.8',
+    ],
 ];

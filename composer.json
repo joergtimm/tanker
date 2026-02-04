@@ -40,13 +40,17 @@
         "symfony/ux-leaflet-map": "^2.32",
         "symfony/ux-map": "^2.32",
         "symfony/ux-turbo": "^2.32",
+        "symfony/ux-twig-component": "^2.32",
         "symfony/validator": "8.0.*",
         "symfony/web-link": "8.0.*",
         "symfony/yaml": "8.0.*",
         "symfonycasts/sass-bundle": "^0.9.0",
         "symfonycasts/tailwind-bundle": "^0.12.0",
         "symfonycasts/verify-email-bundle": "^1.18",
+        "twig/cssinliner-extra": "^3.23",
         "twig/extra-bundle": "^2.12|^3.22.2",
+        "twig/inky-extra": "^3.23",
+        "twig/markdown-extra": "^3.23",
         "twig/twig": "^2.12|^3.22.2"
     },
     "config": {
